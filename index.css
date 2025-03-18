@@ -1,0 +1,138 @@
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html {
+  margin: 0;
+  background-color: hsl(210, 5%, 20%);
+  height: 100%;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: hsl(210, 5%, 20%);
+  height: 100%;
+  width: 100%;
+  padding: 0;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.gauge {
+  z-index: 1;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid hsl(210 10% 40%);
+  background-color: hsl(210 10% 27%);
+  height: 45px;
+  width: 135px;
+  font-size: 22px;
+  color: hsl(210 50% 90%);
+}
+.gauge:hover {
+  background-color: hsl(210, 12%, 30%);
+}
+
+.new-gauge {
+  background-color: hsl(210, 12%, 30%);
+  outline: 1px dashed hsl(0 50% 50%);
+}
+.new-gauge:hover {
+  background-color: hsl(210, 12%, 30%);
+}
+
+.selected-gauge {
+  background-color: hsl(210, 12%, 30%);
+  outline: 1px dashed hsl(160 100% 80%);
+}
+.selected-gauge:hover {
+  background-color: hsl(210, 12%, 30%);
+}
+
+.gauge-renaming-input {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: 20px;
+  padding: 4px;
+  border: 1px dashed hsl(0, 0%, 70%);
+  margin: 4px;
+}
+.gauge-renaming-input:focus {
+  outline: none;
+}
+.gauge-renaming-input::selection {
+  background-color: hsl(160, 25%, 45%);
+  color: hsl(0, 10%, 10%);
+}
+
+.context-menu {
+  z-index: 2;
+  position: absolute;
+  border: 1px solid hsl(210 20% 50%);
+  color: hsl(0, 10%, 10%);
+}
+
+.context-menu-item {
+  border-bottom: 1px solid #555;
+  background-color: hsl(210 20% 70%);
+  padding: 4px 8px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.context-menu-item:hover {
+  background-color: hsl(210 20% 80%);
+}
+.context-menu-item:last-child {
+  border-bottom: none;
+}
+
+.palette {
+  border: none;
+  background: hsl(255 10% 75%);
+  outline: none;
+  padding: 10px;
+}
+
+.palette .wrapper {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-sample {
+  width: 30px;
+  height: 30px;
+}
+
+.color-sample:hover {
+  filter: brightness(110%);
+}
+
+.color-sample[data-color="magenta"] {
+  background-color: hsl(300, 50%, 30%);
+}
+.color-sample[data-color="green"] {
+  background-color: hsl(160, 50%, 30%);
+}
+.color-sample[data-color="orange"] {
+  background-color: hsl(40, 50%, 30%);
+}
+
+/* img {
+  width: 650px;
+  position: absolute;
+} */
