@@ -1,132 +1,140 @@
 var l = console.log;
 
 export function contextMenu() {
-  function renameBlock(e, target) {
-    var initialValue = target ? target.innerText : e.target.innerText;
-    var target = target ? target : e.target;
+  function renameBlock(clickedElement) {
+    if (!clickedElement.classList.contains("gauge")) return;
 
-    if (!target.classList.contains("gauge")) return;
+    var isGaugeNew = clickedElement.classList.contains("new-gauge");
 
-    target.removeAttribute("draggable");
-
-    target.innerText = "";
+    var initialValue = clickedElement.innerText;
+    clickedElement.innerText = "";
 
     var input = document.createElement("input");
     input.classList.add("gauge-renaming-input");
 
-    if (initialValue === "- - -") {
+    if (isGaugeNew) {
       input.value = "";
     } else {
       input.value = initialValue;
     }
 
-    target.append(input);
+    clickedElement.removeAttribute("draggable");
+    clickedElement.append(input);
     input.focus();
 
     function applyRenaming() {
-      target.innerText = input.value;
-      target.classList.remove("new-gauge");
-      target.setAttribute("draggable", "true");
+      clickedElement.innerText = input.value;
+      clickedElement.classList.remove("new-gauge");
+      isGaugeNew = false;
+      clickedElement.setAttribute("draggable", "true");
 
-      if (input.value === "" || input.value === "- - -") {
-        target.innerText = initialValue;
+      if (input.value === "" || isGaugeNew) {
+        clickedElement.innerText = initialValue;
+        clickedElement.classList.add("new-gauge");
+        isGaugeNew = true;
       }
 
       input.remove();
+      document.removeEventListener("keydown", handleBlur);
     }
 
     function handleBlur(e) {
-      l(e);
-      if (e.key === "Escape" || e.key === "Enter") {
+      var key = e.key;
+      if (key === "Escape" || key === "Enter") {
         applyRenaming();
       }
     }
 
     input.addEventListener("blur", applyRenaming, { once: true });
-    document.addEventListener("keydown", handleBlur, { once: true });
+    document.addEventListener("keydown", handleBlur);
   }
 
-  function copyBlock(e, target) {
-    // ... ... ...
+  // function copyBlock(e, target) {
+  //   // ... ... ...
+  // }
+
+  function removeBlock(clickedElement) {
+    clickedElement.remove();
   }
 
-  function removeBlock(e, target) {
-    target.remove();
-  }
-
-  function createBlock(e, target) {
-    var posX = e.x;
-    var posY = e.y;
-
+  function createBlock(clickedElement, pointerPosition) {
     var div = document.createElement("div");
     div.classList.add("gauge");
     div.classList.add("new-gauge");
     div.innerText = "- - -";
     div.draggable = "true";
-    div.style.left = posX - 15 + "px";
-    div.style.top = posY - 15 + "px";
+    div.style.left = pointerPosition[0] - 15 + "px";
+    div.style.top = pointerPosition[1] - 15 + "px";
     div.style.width = 135 + "px";
     div.style.height = 45 + "px";
     document.body.prepend(div);
   }
 
-  function insertPicture() {
-    var img = document.createElement("img");
-    img.src = "./turbine.jpg";
-    var src = document.createElement("div");
-    src.style.position = "absolute";
-    src.style.left = "200px";
-    src.style.top = "200px";
-    src.append(img);
-    document.body.append(src);
-  }
+  // function insertPicture() {
+  //   var img = document.createElement("img");
+  //   img.src = "./turbine.jpg";
+  //   var src = document.createElement("div");
+  //   src.style.position = "absolute";
+  //   src.style.left = "200px";
+  //   src.style.top = "200px";
+  //   src.append(img);
+  //   document.body.append(src);
+  // }
 
-  function selectColor(e, target) {
+  function selectColor(clickedElement, pickedColor, dialog) {
     var colors = {
       magenta: "hsl(300 30% 30%)",
       green: "hsl(160 30% 30%)",
       orange: "hsl(40 30% 30%)",
     };
 
-    if (e.target.classList.contains("color-sample")) {
-      target.style.backgroundColor = colors[e.target.dataset.color];
-      var dialog = document.querySelector(".palette");
+    var isPickerOption = pickedColor.classList.contains("color-sample");
+
+    if (isPickerOption) {
+      clickedElement.style.backgroundColor = colors[pickedColor.dataset.color];
       dialog.close();
     }
   }
 
-  function action(e, target, act) {
-    if (act === "create") {
-      createBlock(e, target);
+  function action(clickedElement, pointerPosition, menuAction) {
+    if (menuAction === "create") {
+      createBlock(clickedElement, pointerPosition);
       return;
     }
 
-    if (act === "rename") {
-      renameBlock(e, target);
+    if (menuAction === "rename") {
+      renameBlock(clickedElement);
       return;
     }
 
     // if (act === "copy") {
-    //   copyBlock(e, target);
+    //   copyBlock(target,pointerPosition);
     //   return
     // }
 
-    if (act === "delete") {
-      removeBlock(e, target);
+    if (menuAction === "delete") {
+      removeBlock(clickedElement, pointerPosition);
       return;
     }
 
-    if (act === "picture") {
-      insertPicture(e, target);
-      return;
-    }
+    // if (menuAction === "picture") {
+    //   insertPicture(clickedElement, pointerPosition);
+    //   return;
+    // }
 
-    if (act === "palette") {
+    if (menuAction === "palette") {
       var dialog = document.querySelector(".palette");
       dialog.showModal();
-      dialog.addEventListener("click", (e) => selectColor(e, target), {
-        once: true,
-      });
+      dialog.addEventListener(
+        "click",
+        (e) => {
+          var pickedColor = e.target;
+          selectColor(clickedElement, pickedColor, dialog);
+        },
+        {
+          once: true,
+        }
+      );
       return;
     }
   }
@@ -148,85 +156,82 @@ export function contextMenu() {
       ],
     };
 
-    function handleMenuClick(e, target) {
-      var menuAction = e.target.dataset.action;
+    function handleMenuClick(clickedElement, pointerPosition, menuAction) {
       closeMenuWindow();
-      action(e, target, menuAction);
+      action(clickedElement, pointerPosition, menuAction);
     }
 
-    function makeMenuWindow(e) {
-      var targetType = "";
-
-      var isTargetGauge = e.target.classList.contains("gauge");
-
-      if (isTargetGauge) {
-        targetType = "gauge";
-      } else {
-        targetType = "canvas";
-      }
-
-      isMenuOpen = true;
+    function makeMenuWindow(clickedElement, pointerPosition) {
+      var isTargetGauge = clickedElement.classList.contains("gauge");
+      var clickedElementType = isTargetGauge ? "gauge" : "canvas";
 
       var menuWindow = document.createElement("div");
       menuWindow.classList.add("context-menu");
-      menuWindow.style.left = e.clientX + "px";
-      menuWindow.style.top = e.clientY + "px";
+      menuWindow.style.left = pointerPosition[0] + "px";
+      menuWindow.style.top = pointerPosition[1] + "px";
 
       var i;
-      for (i = 0; i < menuOptions[targetType].length; i++) {
+      for (i = 0; i < menuOptions[clickedElementType].length; i++) {
         var menuItem = document.createElement("div");
         menuItem.classList.add("context-menu-item");
-        menuItem.innerHTML = menuOptions[targetType][i][0];
-        menuItem.dataset.action = menuOptions[targetType][i][1];
+        menuItem.innerHTML = menuOptions[clickedElementType][i][0];
+        menuItem.dataset.action = menuOptions[clickedElementType][i][1];
         menuWindow.append(menuItem);
       }
 
       document.body.append(menuWindow);
 
       menu = menuWindow;
-
-      var target = e.target;
+      isMenuOpen = true;
 
       document.addEventListener("click", closeMenuWindow, { once: true });
       menu.addEventListener(
         "click",
         (e) => {
-          handleMenuClick(e, target);
+          var pointerPosition = [e.x, e.y];
+          var menuAction = e.target.dataset.action;
+          handleMenuClick(clickedElement, pointerPosition, menuAction);
         },
         { once: true }
       );
     }
 
     function closeMenuWindow() {
-      // TODO better to check a single element
+      // TODO better to check just a single element
       var gauges = document.querySelectorAll(".gauge");
       gauges.forEach((el) => {
         el.classList.remove("selected-gauge");
       });
 
-      isMenuOpen = false;
       menu.remove();
+      isMenuOpen = false;
     }
 
     var f = (e) => {
       e.preventDefault();
 
-      var isTargetGauge = e.target.classList.contains("gauge");
-      var isTargetUninitGauge = e.target.classList.contains("new-gauge");
+      var clickedElement = e.target;
+      var pointerPosition = [e.x, e.y];
 
-      if (isTargetGauge && !isTargetUninitGauge)
-        e.target.classList.add("selected-gauge");
+      var isTargetGauge = clickedElement.classList.contains("gauge");
+      var isTargetNewGauge = clickedElement.classList.contains("new-gauge");
+
+      if (isTargetGauge && !isTargetNewGauge)
+        clickedElement.classList.add("selected-gauge");
 
       if (isMenuOpen) {
         closeMenuWindow();
       }
 
-      makeMenuWindow(e);
+      makeMenuWindow(clickedElement, pointerPosition);
     };
 
     return f;
   })();
 
   document.addEventListener("contextmenu", handleContexMenu);
-  document.addEventListener("dblclick", renameBlock);
+  document.addEventListener("dblclick", (e) => {
+    var clickedElement = e.target;
+    renameBlock(clickedElement);
+  });
 }

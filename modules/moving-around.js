@@ -26,19 +26,4 @@ export function movingAround() {
 
   document.addEventListener("dragstart", dragStart);
   document.addEventListener("dragend", dragEnd);
-
-  // function generateBlocks(source) {
-  //   var i;
-  //   for (i = 0; i < source.length; i++) {
-  //     var div = document.createElement("div");
-  //     div.className = "gauge";
-  //     div.innerText = "cloned";
-  //     div.draggable = "true";
-  //     div.style.left = source[i].x + "px";
-  //     div.style.top = source[i].y + "px";
-  //     div.style.width = source[i].width + "px";
-  //     div.style.height = source[i].height + "px";
-  //     document.body.prepend(div);
-  //   }
-  // }
 }

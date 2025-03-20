@@ -1,7 +1,7 @@
 import { initCanvas } from "./modules/canvas.js";
 import { movingAround } from "./modules/moving-around.js";
-import { exporting } from "./modules/exporting.js";
 import { contextMenu } from "./modules/context-menu.js";
+import { exporting } from "./modules/exporting.js";
 
 (() => {
   var bootList = [initCanvas, movingAround, contextMenu, exporting];

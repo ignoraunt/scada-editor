@@ -20,6 +20,10 @@ body {
   padding: 0;
 }
 
+dialog::backdrop {
+  background: hsla(0, 0%, 10%, 0.5);
+}
+
 canvas {
   position: absolute;
   top: 0;
@@ -44,31 +48,31 @@ canvas {
 }
 
 .new-gauge {
-  background-color: hsl(210, 12%, 30%);
   outline: 1px dashed hsl(0 50% 50%);
+  background-color: hsl(210, 12%, 30%);
 }
 .new-gauge:hover {
   background-color: hsl(210, 12%, 30%);
 }
 
 .selected-gauge {
-  background-color: hsl(210, 12%, 30%);
   outline: 1px dashed hsl(160 100% 80%);
+  background-color: hsl(210, 12%, 30%);
 }
 .selected-gauge:hover {
   background-color: hsl(210, 12%, 30%);
 }
 
 .gauge-renaming-input {
-  width: 100%;
-  background-color: transparent;
   border: none;
-  color: inherit;
-  font-family: inherit;
-  font-size: 20px;
-  padding: 4px;
   border: 1px dashed hsl(0, 0%, 70%);
   margin: 4px;
+  background-color: transparent;
+  width: 100%;
+  padding: 4px;
+  font-family: inherit;
+  font-size: 20px;
+  color: inherit;
 }
 .gauge-renaming-input:focus {
   outline: none;
@@ -100,22 +104,24 @@ canvas {
 }
 
 .palette {
-  border: none;
-  background: hsl(255 10% 75%);
   outline: none;
+  border: 1px solid hsl(160 50% 40% / 50%);
+  background: hsl(0 0% 100% / 10%);
+
   padding: 10px;
 }
 
 .palette .wrapper {
   display: flex;
-  gap: 15px;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  gap: 15px;
 }
 
 .color-sample {
-  width: 30px;
   height: 30px;
+  width: 30px;
+  border: 1px solid hsl(0 0% 100% / 30%);
 }
 
 .color-sample:hover {
@@ -132,7 +138,33 @@ canvas {
   background-color: hsl(40, 50%, 30%);
 }
 
-/* img {
-  width: 650px;
+.temp-buttons-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   position: absolute;
-} */
+  right: 30px;
+  bottom: 30px;
+  z-index: 1;
+}
+
+.input-load-configuration {
+  display: none;
+}
+
+.pseudo-label-load-configuration,
+.button-save-configuration {
+  border: none;
+  background: hsl(210, 20%, 50%);
+  padding: 4px 8px;
+  font-family: monospace;
+  font-size: 20px;
+  color: #222;
+  cursor: pointer;
+  box-shadow: 3px 3px 2px #111;
+}
+
+.pseudo-label-load-configuration:hover,
+.button-save-configuration:hover {
+  filter: brightness(110%);
+}

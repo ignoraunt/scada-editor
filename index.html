@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="index.css" />
     <script src="main.js" type="module" defer></script>
-    <title>Редактор</title>
+    <title>Редактор мнемосхем</title>
   </head>
   <body>
     <dialog class="palette">
@@ -15,7 +15,21 @@
         <div class="color-sample" data-color="orange"></div>
       </div>
     </dialog>
+
     <div class="gauge" draggable="true">600113</div>
+
+    <div class="temp-buttons-block">
+      <input
+        class="button-save-configuration"
+        type="button"
+        value="сохранить"
+      />
+      <label class="pseudo-label-load-configuration">
+        загрузить
+        <input class="input-load-configuration" type="file" />
+      </label>
+    </div>
+
     <canvas></canvas>
   </body>
 </html>
