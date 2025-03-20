@@ -188,3 +188,10 @@ canvas {
 .button-save-configuration:hover {
   filter: brightness(110%);
 }
+
+.phantom-block {
+  background-color: #4411;
+  outline: 1px dashed red;
+  position: absolute;
+  z-index: 2;
+}

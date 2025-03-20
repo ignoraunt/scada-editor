@@ -13,6 +13,8 @@ export function resizing() {
     };
   };
 
+  var currentBlock = null;
+
   function handleMouseMove(e) {
     var targetBlock = e.target;
     var isGauge = targetBlock.classList.contains("gauge");
@@ -34,6 +36,7 @@ export function resizing() {
         targetBlock.classList.add("guage-resize-top");
       } else if (isRightEdge) {
         targetBlock.classList.add("guage-resize-right");
+        currentBlock = targetBlock;
       } else if (isBottomEdge) {
         targetBlock.classList.add("guage-resize-bottom");
       } else {
@@ -59,4 +62,39 @@ export function resizing() {
 
   document.addEventListener("mousemove", handleMouseMoveThrottled);
   document.addEventListener("mouseout", handleMouseOut);
+
+  var active = false;
+
+  function activateResize() {
+    var currentRect = currentBlock.getBoundingClientRect();
+
+    var newBlock = document.createElement("div");
+    newBlock.classList.add("phantom-block");
+    newBlock.style.width = currentRect.width + "px";
+    newBlock.style.height = currentRect.height + "px";
+    newBlock.style.left = currentRect.left + "px";
+    newBlock.style.top = currentRect.top + "px";
+
+    document.body.prepend(newBlock);
+
+    function handleMouseMove(e) {
+      newBlock.style.width = e.x + "px";
+    }
+
+    document.body.addEventListener("mousemove", handleMouseMove);
+
+    document.body.addEventListener(
+      "mouseup",
+      () => {
+        document.body.removeEventListener("mousemove", handleMouseMove);
+        newBlock.classList.remove("phantom-block");
+        newBlock.classList.add("gauge");
+
+        currentBlock.remove();
+      },
+      { once: true }
+    );
+  }
+
+  document.addEventListener("mousedown", activateResize);
 }
