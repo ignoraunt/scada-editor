@@ -1,8 +1,6 @@
 var l = console.log;
 
 export function resizing() {
-  //
-
   var throttle = (callee, delay) => {
     var timeout = 0;
     return (...args) => {
@@ -22,7 +20,7 @@ export function resizing() {
       var pointerXPositionWithinBlock = e.offsetX;
       var pointerYPositionWithinBlock = e.offsetY;
 
-      var padding = 8;
+      var padding = 10;
       var rect = targetBlock.getBoundingClientRect();
 
       var isLeftEdge = pointerXPositionWithinBlock < padding;
@@ -31,15 +29,18 @@ export function resizing() {
       var isBottomEdge = pointerYPositionWithinBlock + padding > rect.height;
 
       if (isLeftEdge) {
-        targetBlock.style.boxShadow = "inset firebrick 3px 0px 0px 0px";
+        targetBlock.classList.add("guage-resize-left");
       } else if (isTopEdge) {
-        targetBlock.style.boxShadow = "inset firebrick 0px 3px 0px 0px";
+        targetBlock.classList.add("guage-resize-top");
       } else if (isRightEdge) {
-        targetBlock.style.boxShadow = "inset firebrick -3px 0px 0px 0px";
+        targetBlock.classList.add("guage-resize-right");
       } else if (isBottomEdge) {
-        targetBlock.style.boxShadow = "inset firebrick 0px -3px 0px 0px";
+        targetBlock.classList.add("guage-resize-bottom");
       } else {
-        targetBlock.style.boxShadow = "none";
+        targetBlock.classList.remove("guage-resize-left");
+        targetBlock.classList.remove("guage-resize-top");
+        targetBlock.classList.remove("guage-resize-right");
+        targetBlock.classList.remove("guage-resize-bottom");
       }
     }
   }
@@ -47,11 +48,14 @@ export function resizing() {
   function handleMouseOut(e) {
     var lastElement = e.fromElement;
     setTimeout(() => {
-      lastElement.style.boxShadow = "none";
-    }, 75);
+      lastElement.classList.remove("guage-resize-left");
+      lastElement.classList.remove("guage-resize-top");
+      lastElement.classList.remove("guage-resize-right");
+      lastElement.classList.remove("guage-resize-bottom");
+    }, 25);
   }
 
-  var handleMouseMoveThrottled = throttle(handleMouseMove, 50);
+  var handleMouseMoveThrottled = throttle(handleMouseMove, 20);
 
   document.addEventListener("mousemove", handleMouseMoveThrottled);
   document.addEventListener("mouseout", handleMouseOut);

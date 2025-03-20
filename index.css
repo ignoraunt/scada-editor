@@ -63,6 +63,26 @@ canvas {
   background-color: hsl(210, 12%, 30%);
 }
 
+.guage-resize-left {
+  box-shadow: inset darkgreen 2px 0px 0px 0px;
+  cursor: col-resize;
+}
+
+.guage-resize-top {
+  box-shadow: inset darkgreen 0px 2px 0px 0px;
+  cursor: row-resize;
+}
+
+.guage-resize-right {
+  box-shadow: inset darkgreen -2px 0px 0px 0px;
+  cursor: col-resize;
+}
+
+.guage-resize-bottom {
+  box-shadow: inset darkgreen 0px -2px 0px 0px;
+  cursor: row-resize;
+}
+
 .gauge-renaming-input {
   border: none;
   border: 1px dashed hsl(0, 0%, 70%);
