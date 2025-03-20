@@ -66,8 +66,13 @@ export function resizing() {
   var active = false;
 
   function activateResize() {
-    var currentRect = currentBlock.getBoundingClientRect();
+    if (!currentBlock) return;
 
+    var isGauge = currentBlock.classList.contains("gauge");
+
+    if (!isGauge) return;
+
+    var currentRect = currentBlock.getBoundingClientRect();
     var newBlock = document.createElement("div");
     newBlock.classList.add("phantom-block");
     newBlock.style.width = currentRect.width + "px";
@@ -89,6 +94,8 @@ export function resizing() {
         document.body.removeEventListener("mousemove", handleMouseMove);
         newBlock.classList.remove("phantom-block");
         newBlock.classList.add("gauge");
+        newBlock.draggable = "true";
+        newBlock.innerText = currentBlock.innerText;
 
         currentBlock.remove();
       },
@@ -96,5 +103,9 @@ export function resizing() {
     );
   }
 
-  document.addEventListener("mousedown", activateResize);
+  document.addEventListener(
+    "mousedown",
+    activateResize,
+    { once: true }
+  );
 }
