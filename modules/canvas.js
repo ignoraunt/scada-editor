@@ -13,7 +13,7 @@ export function initCanvas() {
   cs.clearRect(0, 0, canvas.width, canvas.height);
 
   cs.beginPath();
-  cs.strokeStyle = "hsla(210, 5%, 15%, 0.7)";
+  cs.strokeStyle = "hsl(0, 0%, 10%)";
   cs.lineWidth = 1;
 
   var i;

@@ -1,3 +1,5 @@
+var l = console.log;
+
 import { initCanvas } from "./modules/canvas.js";
 import { movingAround } from "./modules/moving-around.js";
 import { resizing } from "./modules/resizing.js";
