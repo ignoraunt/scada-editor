@@ -60,22 +60,22 @@ canvas {
   background-color: hsl(210, 12%, 30%);
 }
 
-.guage-resize-top {
+.gauge-resize-top {
   cursor: row-resize;
   box-shadow: inset darkgreen 0px 2px 0px 0px;
 }
 
-.guage-resize-left {
+.gauge-resize-left {
   cursor: col-resize;
   box-shadow: inset darkgreen 2px 0px 0px 0px;
 }
 
-.guage-resize-right {
+.gauge-resize-right {
   cursor: col-resize;
   box-shadow: inset darkgreen -2px 0px 0px 0px;
 }
 
-.guage-resize-bottom {
+.gauge-resize-bottom {
   cursor: row-resize;
   box-shadow: inset darkgreen 0px -2px 0px 0px;
 }

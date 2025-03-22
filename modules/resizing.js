@@ -14,37 +14,46 @@ export function resizing() {
   };
 
   var currentBlock = null;
+  var targetResizeAxis = "";
 
   function handleMouseMove(e) {
     var targetBlock = e.target;
     var isGauge = targetBlock.classList.contains("gauge");
-    if (isGauge) {
-      var pointerXPositionWithinBlock = e.offsetX;
-      var pointerYPositionWithinBlock = e.offsetY;
 
-      var padding = 10;
-      var rect = targetBlock.getBoundingClientRect();
+    if (!isGauge) return;
 
-      var isLeftEdge = pointerXPositionWithinBlock < padding;
-      var isTopEdge = pointerYPositionWithinBlock < padding;
-      var isRightEdge = pointerXPositionWithinBlock + padding > rect.width;
-      var isBottomEdge = pointerYPositionWithinBlock + padding > rect.height;
+    var pointerXPositionWithinBlock = e.offsetX;
+    var pointerYPositionWithinBlock = e.offsetY;
 
-      if (isLeftEdge) {
-        targetBlock.classList.add("guage-resize-left");
-      } else if (isTopEdge) {
-        targetBlock.classList.add("guage-resize-top");
-      } else if (isRightEdge) {
-        targetBlock.classList.add("guage-resize-right");
-        currentBlock = targetBlock;
-      } else if (isBottomEdge) {
-        targetBlock.classList.add("guage-resize-bottom");
-      } else {
-        targetBlock.classList.remove("guage-resize-left");
-        targetBlock.classList.remove("guage-resize-top");
-        targetBlock.classList.remove("guage-resize-right");
-        targetBlock.classList.remove("guage-resize-bottom");
-      }
+    var padding = 10;
+    var rect = targetBlock.getBoundingClientRect();
+
+    var isLeftEdge = pointerXPositionWithinBlock < padding;
+    var isTopEdge = pointerYPositionWithinBlock < padding;
+    var isRightEdge = pointerXPositionWithinBlock + padding > rect.width;
+    var isBottomEdge = pointerYPositionWithinBlock + padding > rect.height;
+
+    if (isLeftEdge) {
+      targetBlock.classList.add("gauge-resize-left");
+      currentBlock = targetBlock;
+      targetResizeAxis = "x";
+    } else if (isTopEdge) {
+      targetBlock.classList.add("gauge-resize-top");
+      currentBlock = targetBlock;
+      targetResizeAxis = "y";
+    } else if (isRightEdge) {
+      targetBlock.classList.add("gauge-resize-right");
+      currentBlock = targetBlock;
+      targetResizeAxis = "x";
+    } else if (isBottomEdge) {
+      targetBlock.classList.add("gauge-resize-bottom");
+      targetResizeAxis = "y";
+    } else {
+      targetBlock.classList.remove("gauge-resize-left");
+      targetBlock.classList.remove("gauge-resize-top");
+      targetBlock.classList.remove("gauge-resize-right");
+      targetBlock.classList.remove("gauge-resize-bottom");
+      targetResizeAxis = "none";
     }
   }
 
@@ -63,9 +72,7 @@ export function resizing() {
   document.addEventListener("mousemove", handleMouseMoveThrottled);
   document.addEventListener("mouseout", handleMouseOut);
 
-  var active = false;
-
-  function activateResize() {
+  function activateResizing() {
     if (!currentBlock) return;
 
     var isGauge = currentBlock.classList.contains("gauge");
@@ -83,29 +90,39 @@ export function resizing() {
     document.body.prepend(newBlock);
 
     function handleMouseMove(e) {
-      newBlock.style.width = e.x + "px";
+      switch (targetResizeAxis) {
+        case "x":
+          newBlock.style.width = e.x + "px";
+          break;
+
+        case "y":
+          newBlock.style.height = e.y + "px";
+          break;
+
+        case "none":
+          // newBlock.style.height = e.y + "px";
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    function handleMouseUp() {
+      newBlock.classList.remove("phantom-block");
+      newBlock.classList.add("gauge");
+      newBlock.draggable = "true";
+      newBlock.innerText = currentBlock.innerText;
+
+      currentBlock.remove();
+
+      document.body.removeEventListener("mousemove", handleMouseMove);
     }
 
     document.body.addEventListener("mousemove", handleMouseMove);
 
-    document.body.addEventListener(
-      "mouseup",
-      () => {
-        document.body.removeEventListener("mousemove", handleMouseMove);
-        newBlock.classList.remove("phantom-block");
-        newBlock.classList.add("gauge");
-        newBlock.draggable = "true";
-        newBlock.innerText = currentBlock.innerText;
-
-        currentBlock.remove();
-      },
-      { once: true }
-    );
+    document.body.addEventListener("mouseup", handleMouseUp, { once: true });
   }
 
-  document.addEventListener(
-    "mousedown",
-    activateResize,
-    { once: true }
-  );
+  document.addEventListener("mousedown", activateResizing, { once: true });
 }
