@@ -1,6 +1,6 @@
 Work is obviously in progress.
 
-![me](https://github.com/ignoraunt/scada-editor/blob/main/01f.gif)
+![me](https://i.postimg.cc/sDwBpLK0/01f.gif)
 
 ![me](https://postimg.cc/bsSNP37Q)
 
