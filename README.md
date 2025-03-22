@@ -1,3 +1,3 @@
 Work is obviously in progress.
 
-![me](https://i.postimg.cc/sDwBpLK0/01f.gif)
+![me](https://i.postimg.cc/LXLYzjG3/03f.gif)
