@@ -60,10 +60,10 @@ export function resizing() {
   function handleMouseOut(e) {
     var lastElement = e.fromElement;
     setTimeout(() => {
-      lastElement.classList.remove("guage-resize-left");
-      lastElement.classList.remove("guage-resize-top");
-      lastElement.classList.remove("guage-resize-right");
-      lastElement.classList.remove("guage-resize-bottom");
+      lastElement.classList.remove("gauge-resize-left");
+      lastElement.classList.remove("gauge-resize-top");
+      lastElement.classList.remove("gauge-resize-right");
+      lastElement.classList.remove("gauge-resize-bottom");
     }, 25);
   }
 
