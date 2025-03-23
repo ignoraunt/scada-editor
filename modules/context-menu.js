@@ -58,16 +58,20 @@ export function contextMenu() {
   }
 
   function createBlock(clickedElement, pointerPosition) {
+    var activeWrapper = document.querySelector(".active-wrapper");
+    var activeWrapperOffsetX = activeWrapper.offsetLeft;
+    var activeWrapperOffsetY = activeWrapper.offsetTop;
+    
     var div = document.createElement("div");
     div.classList.add("gauge");
     div.classList.add("new-gauge");
     div.innerText = "- - -";
     div.draggable = "true";
-    div.style.left = pointerPosition[0] - 15 + "px";
-    div.style.top = pointerPosition[1] - 15 + "px";
+    div.style.left = pointerPosition[0] - activeWrapperOffsetX + "px";
+    div.style.top = pointerPosition[1] - activeWrapperOffsetY + "px";
     div.style.width = 135 + "px";
     div.style.height = 45 + "px";
-    document.body.prepend(div);
+    activeWrapper.append(div);
   }
 
   // function insertPicture() {

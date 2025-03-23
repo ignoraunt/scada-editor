@@ -1,11 +1,13 @@
 import { gridStep } from "/modules/elements-moving.js";
 
 export function backgroundGrid() {
-  var canvas = document.querySelector("canvas");
+  var canvas = document.querySelector(".background-layer-canvas");
   var cs = canvas.getContext("2d");
 
-  canvas.width = document.body.clientWidth;
-  canvas.height = document.body.clientHeight;
+  var activeWrapper = document.querySelector(".active-wrapper");
+
+  canvas.width = activeWrapper.clientWidth;
+  canvas.height = activeWrapper.clientHeight;
 
   var horizontalLinesCount = Math.floor(canvas.width) / gridStep;
   var verticalLinesCount = Math.floor(canvas.height) / gridStep;
@@ -13,6 +15,13 @@ export function backgroundGrid() {
   cs.clearRect(0, 0, canvas.width, canvas.height);
 
   cs.beginPath();
+
+  cs.fillStyle = "hsl(210, 18%, 22%)";
+
+
+  cs.rect(0, 0, canvas.width, canvas.height);
+  cs.fill();
+
   cs.strokeStyle = "hsl(0, 0%, 10%)";
   cs.lineWidth = 1;
 

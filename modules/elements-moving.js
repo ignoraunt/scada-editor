@@ -3,12 +3,18 @@ var l = console.log;
 export var gridStep = 30;
 
 export function elementsMoving() {
+  var activeWrapper = document.querySelector(".active-wrapper");
+
+  var wrapperOffsetX = activeWrapper.offsetLeft;
+  var wrapperOffsetY = activeWrapper.offsetTop;
+
   var pointerOffsetX = 0;
   var pointerOffsetY = 0;
 
   function dragStart(e) {
-    pointerOffsetX = e.offsetX;
-    pointerOffsetY = e.offsetY;
+    l(e)
+    pointerOffsetX = wrapperOffsetX + e.offsetX;
+    pointerOffsetY = wrapperOffsetY + e.offsetY;
   }
 
   function dragEnd(e) {
@@ -24,6 +30,6 @@ export function elementsMoving() {
     e.toElement.style.top = gridSnappedY + "px";
   }
 
-  document.addEventListener("dragstart", dragStart);
-  document.addEventListener("dragend", dragEnd);
+  activeWrapper.addEventListener("dragstart", dragStart);
+  activeWrapper.addEventListener("dragend", dragEnd);
 }

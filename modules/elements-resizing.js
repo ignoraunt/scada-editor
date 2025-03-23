@@ -87,7 +87,7 @@ export function elementsResizing() {
     newBlock.style.left = currentRect.left + "px";
     newBlock.style.top = currentRect.top + "px";
 
-    document.body.prepend(newBlock);
+    document.body.append(newBlock);
 
     function handleMouseMove(e) {
       switch (targetResizeAxis) {

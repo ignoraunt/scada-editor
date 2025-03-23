@@ -16,7 +16,7 @@ export function configurationHandling() {
       div.style.top = source[i].y + "px";
       div.style.width = source[i].width + "px";
       div.style.height = source[i].height + "px";
-      document.body.prepend(div);
+      document.body.append(div);
     }
   }
 

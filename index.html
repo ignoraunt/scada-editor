@@ -8,30 +8,30 @@
     <title>Редактор мнемосхем</title>
   </head>
   <body>
-    <div class="testing-wrapper">
-      <dialog class="palette">
-        <div class="wrapper">
-          <div class="color-sample" data-color="magenta"></div>
-          <div class="color-sample" data-color="green"></div>
-          <div class="color-sample" data-color="orange"></div>
-        </div>
-      </dialog>
+    <dialog class="palette">
+      <div class="wrapper">
+        <div class="color-sample" data-color="magenta"></div>
+        <div class="color-sample" data-color="green"></div>
+        <div class="color-sample" data-color="orange"></div>
+      </div>
+    </dialog>
+
+    <div class="temp-buttons-block">
+      <input
+        class="button-save-configuration"
+        type="button"
+        value="сохранить"
+      />
+      <label class="pseudo-label-load-configuration">
+        загрузить
+        <input class="input-load-configuration" type="file" />
+      </label>
+    </div>
+
+    <div class="active-wrapper">
+      <canvas class="background-layer-canvas"></canvas>
 
       <div class="gauge" draggable="true">600113</div>
-
-      <div class="temp-buttons-block">
-        <input
-          class="button-save-configuration"
-          type="button"
-          value="сохранить"
-        />
-        <label class="pseudo-label-load-configuration">
-          загрузить
-          <input class="input-load-configuration" type="file" />
-        </label>
-      </div>
-
-      <canvas></canvas>
     </div>
   </body>
 </html>
