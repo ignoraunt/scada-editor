@@ -60,11 +60,10 @@ export function resizing() {
   function handleMouseOut(e) {
     var lastElement = e.fromElement;
     setTimeout(() => {
-      lastElement.classList.remove("gauge-resize-left");
-      lastElement.classList.remove("gauge-resize-top");
-      lastElement.classList.remove("gauge-resize-right");
-      lastElement.classList.remove("gauge-resize-bottom");
-      // targetResizeAxis = "none";
+      lastElement.classList.remove("guage-resize-left");
+      lastElement.classList.remove("guage-resize-top");
+      lastElement.classList.remove("guage-resize-right");
+      lastElement.classList.remove("guage-resize-bottom");
     }, 25);
   }
 
@@ -91,7 +90,6 @@ export function resizing() {
     document.body.prepend(newBlock);
 
     function handleMouseMove(e) {
-      l('move')
       switch (targetResizeAxis) {
         case "x":
           newBlock.style.width = e.x + "px";
