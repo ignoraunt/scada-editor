@@ -1,4 +1,4 @@
-import { gridStep } from "/modules/moving-around.js";
+import { gridStep } from "/modules/elements-moving.js";
 
 export function backgroundGrid() {
   var canvas = document.querySelector("canvas");
