@@ -1,19 +1,25 @@
 var l = console.log;
 
-import { initCanvas } from "./modules/canvas.js";
-import { movingAround } from "./modules/moving-around.js";
-import { resizing } from "./modules/resizing.js";
+import { backgroundGrid } from "./modules/background-grid.js";
+import { elementsMoving } from "./modules/elements-moving.js";
+import { elementsResizing } from "./modules/elements-resizing.js";
 import { contextMenu } from "./modules/context-menu.js";
-import { exporting } from "./modules/exporting.js";
+import { configurationHandling } from "./modules/configuration-handling.js";
 
 (() => {
-  var bootList = [initCanvas, movingAround, resizing, contextMenu, exporting];
+  var modulesToExecList = [
+    backgroundGrid,
+    elementsMoving,
+    elementsResizing,
+    contextMenu,
+    configurationHandling,
+  ];
 
   var i;
-  for (i = 0; i < bootList.length; i++) {
+  for (i = 0; i < modulesToExecList.length; i++) {
     setTimeout(
       (i) => {
-        bootList[i]();
+        modulesToExecList[i]();
       },
       0,
       i

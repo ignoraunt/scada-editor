@@ -1,6 +1,6 @@
 var l = console.log;
 
-export function exporting() {
+export function configurationHandling() {
   var fileInput = document.querySelector(".input-load-configuration");
 
   function renderBlocks(source) {

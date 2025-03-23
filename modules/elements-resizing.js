@@ -1,6 +1,6 @@
 var l = console.log;
 
-export function resizing() {
+export function elementsResizing() {
   var throttle = (callee, delay) => {
     var timeout = 0;
     return (...args) => {

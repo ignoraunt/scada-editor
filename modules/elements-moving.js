@@ -2,7 +2,7 @@ var l = console.log;
 
 export var gridStep = 30;
 
-export function movingAround() {
+export function elementsMoving() {
   var pointerOffsetX = 0;
   var pointerOffsetY = 0;
 
