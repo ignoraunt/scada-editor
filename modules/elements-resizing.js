@@ -22,11 +22,11 @@ export function elementsResizing() {
 
     if (!isGauge) return;
 
-    var pointerXPositionWithinBlock = e.offsetX;
-    var pointerYPositionWithinBlock = e.offsetY;
-
     var padding = 6;
     var rect = targetBlock.getBoundingClientRect();
+
+    var pointerXPositionWithinBlock = e.offsetX;
+    var pointerYPositionWithinBlock = e.offsetY;
 
     var isLeftEdge = pointerXPositionWithinBlock < padding;
     var isTopEdge = pointerYPositionWithinBlock < padding;
@@ -76,61 +76,132 @@ export function elementsResizing() {
       lastElement.classList.remove("gauge-resize-top");
       lastElement.classList.remove("gauge-resize-right");
       lastElement.classList.remove("gauge-resize-bottom");
+      targetResizeAxis = "none";
     }, 25);
+  }
+
+  function activateResizing() {
+    setTimeout(() => {
+      if (!currentBlock) return;
+
+      var isGauge = currentBlock.classList.contains("gauge");
+
+      if (!isGauge) return;
+
+      if (targetResizeAxis === "none") return;
+
+      var activeWrapper = document.querySelector(".active-wrapper");
+      var currentRect = currentBlock.getBoundingClientRect();
+
+      var wrapperOffsetX = activeWrapper.offsetLeft;
+      var wrapperOffsetY = activeWrapper.offsetTop;
+
+      var newBlock = document.createElement("div");
+      newBlock.classList.add("phantom-block");
+      newBlock.style.width = currentRect.width + "px";
+      newBlock.style.height = currentRect.height + "px";
+      newBlock.style.left = wrapperOffsetX - currentRect.left + "px";
+      newBlock.style.top = wrapperOffsetY - currentRect.top + "px";
+
+      activeWrapper.append(newBlock);
+
+      function handleMouseMove(e, r) {
+        switch (r) {
+          case "x":
+            newBlock.style.width = e.x + "px";
+            break;
+
+          case "y":
+            newBlock.style.height = e.y + "px";
+            break;
+
+          case "none":
+            // newBlock.style.height = e.y + "px";
+            break;
+
+          default:
+            break;
+        }
+      }
+
+      function handleMouseUp() {
+        newBlock.classList.remove("phantom-block");
+        newBlock.classList.add("gauge");
+        newBlock.draggable = "true";
+        newBlock.innerText = currentBlock.innerText;
+        currentBlock.remove();
+        document.body.removeEventListener("mousemove", mouseMoveHandler);
+      }
+
+      function mouseMoveHandler(e) {
+        var r = targetResizeAxis;
+        l("!!", r);
+        handleMouseMove(e, r);
+      }
+
+      document.body.addEventListener("mousemove", mouseMoveHandler);
+      document.body.addEventListener("mouseup", handleMouseUp);
+    }, 35);
   }
 
   var handleMouseMoveThrottled = throttle(detectElementEdge, 10);
 
-  function activateResizing() {
-    if (!currentBlock) return;
+  function mm(e, targetBlock) {
+    targetBlock.style.width = e.x + "px";
 
-    var isGauge = currentBlock.classList.contains("gauge");
+    document.body.addEventListener("mouseup", nn);
+  }
+
+  function nn(e) {
+    document.body.removeEventListener("mousemove", mm);
+  }
+
+  function clickOnEdge(e) {
+    var targetBlock = e.target;
+
+    var isGauge = targetBlock.classList.contains("gauge");
 
     if (!isGauge) return;
 
-    var currentRect = currentBlock.getBoundingClientRect();
-    var newBlock = document.createElement("div");
-    newBlock.classList.add("phantom-block");
-    newBlock.style.width = currentRect.width + "px";
-    newBlock.style.height = currentRect.height + "px";
-    newBlock.style.left = currentRect.left + "px";
-    newBlock.style.top = currentRect.top + "px";
+    var padding = 6;
+    var rect = targetBlock.getBoundingClientRect();
 
-    document.body.append(newBlock);
+    var pointerXPositionWithinBlock = e.offsetX;
+    var pointerYPositionWithinBlock = e.offsetY;
 
-    function handleMouseMove(e) {
-      switch (targetResizeAxis) {
-        case "x":
-          newBlock.style.width = e.x + "px";
-          break;
+    var isLeftEdge = pointerXPositionWithinBlock < padding;
+    var isTopEdge = pointerYPositionWithinBlock < padding;
+    var isRightEdge = pointerXPositionWithinBlock + padding > rect.width;
+    var isBottomEdge = pointerYPositionWithinBlock + padding > rect.height;
 
-        case "y":
-          newBlock.style.height = e.y + "px";
-          break;
+    // === === ===
 
-        case "none":
-          // newBlock.style.height = e.y + "px";
-          break;
+    // === === ===
 
-        default:
-          break;
-      }
+    if (isRightEdge) {
+      var activeWrapper = document.querySelector(".active-wrapper");
+
+      var wrapperOffsetX = activeWrapper.offsetLeft;
+      var wrapperOffsetY = activeWrapper.offsetTop;
+
+      var newBlock = document.createElement("div");
+      newBlock.classList.add("phantom-block");
+      newBlock.style.width = rect.width + "px";
+      newBlock.style.height = rect.height + "px";
+      newBlock.style.left = wrapperOffsetX - rect.left + "px";
+      newBlock.style.top = wrapperOffsetY - rect.top + "px";
+
+      activeWrapper.append(newBlock);
+
+      document.body.addEventListener("mousemove", (e) => {
+        mm(e, targetBlock);
+      });
     }
-
-    function handleMouseUp() {
-      newBlock.classList.remove("phantom-block");
-      newBlock.classList.add("gauge");
-      newBlock.draggable = "true";
-      newBlock.innerText = currentBlock.innerText;
-      currentBlock.remove();
-      document.body.removeEventListener("mousemove", handleMouseMove);
-    }
-
-    document.body.addEventListener("mousemove", handleMouseMove);
-    document.body.addEventListener("mouseup", handleMouseUp, { once: true });
   }
 
-  document.addEventListener("mousedown", activateResizing, { once: true });
-  document.addEventListener("mousemove", handleMouseMoveThrottled);
-  document.addEventListener("mouseout", handleMouseOut);
+  document.body.addEventListener("mousedown", clickOnEdge);
+
+  // document.addEventListener("mousedown", activateResizing);
+  // document.addEventListener("mousemove", handleMouseMoveThrottled);
+  // document.addEventListener("mouseout", handleMouseOut);
 }

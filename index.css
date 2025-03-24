@@ -21,10 +21,10 @@ body {
 }
 
 .active-wrapper {
+  position: relative;
   border: 2px solid hsl(210, 20%, 30%);
   height: 800px;
   width: 1000px;
-  position: relative;
 }
 
 .background-layer-canvas {
@@ -39,10 +39,8 @@ dialog::backdrop {
 .gauge {
   z-index: 1;
   position: absolute;
-
   top: 0;
   left: 0;
-  
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,23 +72,19 @@ dialog::backdrop {
 }
 
 .gauge-resize-top {
-  cursor: row-resize;
-  box-shadow: inset darkgreen 0px 2px 0px 0px;
+  box-shadow: inset hsl(160, 100%, 30%) 0px 3px 0px 0px;
 }
 
 .gauge-resize-left {
-  cursor: col-resize;
-  box-shadow: inset darkgreen 2px 0px 0px 0px;
+  box-shadow: inset hsl(160, 100%, 30%) 3px 0px 0px 0px;
 }
 
 .gauge-resize-right {
-  cursor: col-resize;
-  box-shadow: inset darkgreen -2px 0px 0px 0px;
+  box-shadow: inset hsl(160, 100%, 30%) -3px 0px 0px 0px;
 }
 
 .gauge-resize-bottom {
-  cursor: row-resize;
-  box-shadow: inset darkgreen 0px -2px 0px 0px;
+  box-shadow: inset hsl(160, 100%, 30%) 0px -3px 0px 0px;
 }
 
 .gauge-renaming-input {
