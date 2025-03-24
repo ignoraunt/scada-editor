@@ -16,7 +16,7 @@ export function elementsResizing() {
   var currentBlock = null;
   var targetResizeAxis = "";
 
-  function handleMouseMove(e) {
+  function detectElementEdge(e) {
     var targetBlock = e.target;
     var isGauge = targetBlock.classList.contains("gauge");
 
@@ -25,7 +25,7 @@ export function elementsResizing() {
     var pointerXPositionWithinBlock = e.offsetX;
     var pointerYPositionWithinBlock = e.offsetY;
 
-    var padding = 10;
+    var padding = 6;
     var rect = targetBlock.getBoundingClientRect();
 
     var isLeftEdge = pointerXPositionWithinBlock < padding;
@@ -35,18 +35,30 @@ export function elementsResizing() {
 
     if (isLeftEdge) {
       targetBlock.classList.add("gauge-resize-left");
+      targetBlock.classList.remove("gauge-resize-top");
+      targetBlock.classList.remove("gauge-resize-right");
+      targetBlock.classList.remove("gauge-resize-bottom");
       currentBlock = targetBlock;
       targetResizeAxis = "x";
     } else if (isTopEdge) {
       targetBlock.classList.add("gauge-resize-top");
+      targetBlock.classList.remove("gauge-resize-left");
+      targetBlock.classList.remove("gauge-resize-right");
+      targetBlock.classList.remove("gauge-resize-bottom");
       currentBlock = targetBlock;
       targetResizeAxis = "y";
     } else if (isRightEdge) {
       targetBlock.classList.add("gauge-resize-right");
+      targetBlock.classList.remove("gauge-resize-left");
+      targetBlock.classList.remove("gauge-resize-top");
+      targetBlock.classList.remove("gauge-resize-bottom");
       currentBlock = targetBlock;
       targetResizeAxis = "x";
     } else if (isBottomEdge) {
       targetBlock.classList.add("gauge-resize-bottom");
+      targetBlock.classList.remove("gauge-resize-left");
+      targetBlock.classList.remove("gauge-resize-top");
+      targetBlock.classList.remove("gauge-resize-right");
       targetResizeAxis = "y";
     } else {
       targetBlock.classList.remove("gauge-resize-left");
@@ -67,10 +79,7 @@ export function elementsResizing() {
     }, 25);
   }
 
-  var handleMouseMoveThrottled = throttle(handleMouseMove, 20);
-
-  document.addEventListener("mousemove", handleMouseMoveThrottled);
-  document.addEventListener("mouseout", handleMouseOut);
+  var handleMouseMoveThrottled = throttle(detectElementEdge, 10);
 
   function activateResizing() {
     if (!currentBlock) return;
@@ -113,16 +122,15 @@ export function elementsResizing() {
       newBlock.classList.add("gauge");
       newBlock.draggable = "true";
       newBlock.innerText = currentBlock.innerText;
-
       currentBlock.remove();
-
       document.body.removeEventListener("mousemove", handleMouseMove);
     }
 
     document.body.addEventListener("mousemove", handleMouseMove);
-
     document.body.addEventListener("mouseup", handleMouseUp, { once: true });
   }
 
   document.addEventListener("mousedown", activateResizing, { once: true });
+  document.addEventListener("mousemove", handleMouseMoveThrottled);
+  document.addEventListener("mouseout", handleMouseOut);
 }
