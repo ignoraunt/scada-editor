@@ -2,6 +2,8 @@ var l = console.log;
 
 import { utils } from "./overarching-utilities.js";
 
+export var structures;
+
 export function elementsResizing() {
   // ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
   // ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
@@ -44,6 +46,18 @@ export function elementsResizing() {
       this.gauges[params[0]] = new Gauge(...params);
     }
 
+    removeGauge(id) {
+      var DOMElement = document.querySelector('div[data-id="' + id + '"]');
+      DOMElement.remove();
+      delete this.gauges[id];
+    }
+
+    changeGaugeID(id) {
+      var DOMElement = document.querySelector('div[data-id="' + id + '"]');
+      DOMElement.dataset.id = id;
+      DOMElement.innerText = id;
+    }
+
     renderGauges() {
       for (var id in this.gauges) {
         this.gauges[id].pushToDOM();
@@ -55,11 +69,9 @@ export function elementsResizing() {
     }
   }
 
-  var structures = new Structures();
+  structures = new Structures();
   structures.makeGauge("600112", 200, 100, 150, 150);
   structures.makeGauge("600114", 200, 100, 450, 450);
-
-  structures.gauges[600112].move(300, 300);
 
   structures.renderGauges();
 

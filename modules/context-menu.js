@@ -1,5 +1,7 @@
 var l = console.log;
 
+import { structures } from "./elements-resizing.js";
+
 export function contextMenu() {
   function renameBlock(clickedElement) {
     if (!clickedElement.classList.contains("gauge")) return;
@@ -61,7 +63,7 @@ export function contextMenu() {
     var activeWrapper = document.querySelector(".active-wrapper");
     var activeWrapperOffsetX = activeWrapper.offsetLeft;
     var activeWrapperOffsetY = activeWrapper.offsetTop;
-    
+
     var div = document.createElement("div");
     div.classList.add("gauge");
     div.classList.add("new-gauge");
@@ -117,7 +119,8 @@ export function contextMenu() {
     // }
 
     if (menuAction === "delete") {
-      removeBlock(clickedElement, pointerPosition);
+      var id = clickedElement.dataset.id;
+      structures.removeGauge(id);
       return;
     }
 
