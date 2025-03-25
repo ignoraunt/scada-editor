@@ -1,4 +1,4 @@
-import { gridStep } from "/modules/elements-moving.js";
+import { gridStep } from "./elements-moving.js";
 
 export function backgroundGrid() {
   var canvas = document.querySelector(".background-layer-canvas");
@@ -17,7 +17,6 @@ export function backgroundGrid() {
   cs.beginPath();
 
   cs.fillStyle = "hsl(210, 18%, 22%)";
-
 
   cs.rect(0, 0, canvas.width, canvas.height);
   cs.fill();
