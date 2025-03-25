@@ -3,6 +3,69 @@ var l = console.log;
 import { utils } from "./overarching-utilities.js";
 
 export function elementsResizing() {
+  // ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
+  // ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
+
+  var wrapper = document.querySelector(".active-wrapper");
+
+  class Gauge {
+    constructor(id, width, height, x, y) {
+      this.id = id;
+      this.width = width;
+      this.height = height;
+      this.x = x;
+      this.y = y;
+    }
+
+    pushToDOM() {
+      var div = document.createElement("div");
+      div.style.left = this.x + "px";
+      div.style.top = this.y + "px";
+      div.classList.add("gauge");
+      div.setAttribute("draggable", "true");
+      div.dataset.id = this.id;
+      div.innerText = this.id;
+      wrapper.append(div);
+    }
+
+    move(x, y) {
+      this.x = x;
+      this.y = y;
+    }
+  }
+
+  class Structures {
+    constructor() {
+      this.wrapper = null;
+      this.gauges = {};
+    }
+
+    makeGauge(...params) {
+      this.gauges[params[0]] = new Gauge(...params);
+    }
+
+    renderGauges() {
+      for (var id in this.gauges) {
+        this.gauges[id].pushToDOM();
+      }
+    }
+
+    showConfiguration() {
+      l(this.gauges);
+    }
+  }
+
+  var structures = new Structures();
+  structures.makeGauge("600112", 200, 100, 150, 150);
+  structures.makeGauge("600114", 200, 100, 450, 450);
+
+  structures.gauges[600112].move(300, 300);
+
+  structures.renderGauges();
+
+  // ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
+  // ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
+
   var currentBlock = null;
   var targetResizeAxis = "";
 
