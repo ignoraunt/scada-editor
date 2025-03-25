@@ -1,18 +1,8 @@
 var l = console.log;
 
-export function elementsResizing() {
-  var throttle = (callee, delay) => {
-    var timeout = 0;
-    return (...args) => {
-      if (timeout !== 0) return;
-      timeout = setTimeout(() => {
-        callee(...args);
-        clearTimeout(timeout);
-        timeout = 0;
-      }, delay);
-    };
-  };
+import { utils } from "./overarching-utilities.js";
 
+export function elementsResizing() {
   var currentBlock = null;
   var targetResizeAxis = "";
 
@@ -144,7 +134,7 @@ export function elementsResizing() {
     }, 35);
   }
 
-  var handleMouseMoveThrottled = throttle(detectElementEdge, 10);
+  var handleMouseMoveThrottled = utils.throttle(detectElementEdge, 10);
 
   function mm(e, targetBlock) {
     targetBlock.style.width = e.x + "px";
