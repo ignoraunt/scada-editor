@@ -1,8 +1,18 @@
 var l = console.log;
 
-import { throttle } from "./overarching-utilities";
-
 export function elementsResizing() {
+  var throttle = (callee, delay) => {
+    var timeout = 0;
+    return (...args) => {
+      if (timeout !== 0) return;
+      timeout = setTimeout(() => {
+        callee(...args);
+        clearTimeout(timeout);
+        timeout = 0;
+      }, delay);
+    };
+  };
+
   var currentBlock = null;
   var targetResizeAxis = "";
 
