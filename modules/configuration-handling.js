@@ -15,7 +15,7 @@ export function configurationHandling() {
     });
   }
 
-  var saveFile = (stateBlob) => {
+  function saveFile(stateBlob) {
     showSaveFilePicker({
       suggestedName: utils.getStateDate(),
     })
@@ -31,7 +31,7 @@ export function configurationHandling() {
           console.error(err.name, err.message);
         }
       });
-  };
+  }
 
   function handleSaving() {
     var stateJSON = structures.saveState();

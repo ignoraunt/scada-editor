@@ -45,6 +45,7 @@ export function oop() {
       this.title = stateJSON.title;
       this.wrapper = stateJSON.wrapper;
       this.gauges = stateJSON.gauges;
+      this.applyState();
     }
 
     saveState() {
@@ -55,9 +56,19 @@ export function oop() {
       l(this);
     }
 
-    checkElementType(e) {
-      l(e.target.dataset.type);
+    // TODO
+    applyState() {
+      for (var id in this.gauges) {
+        var g = this.gauges[id];
+        this.makeGauge(g.id, g.type, g.x, g.y);
+      }
+
+      this.renderAllGauges();
     }
+
+    // checkElementType(e) {
+    //   l(e.target.dataset.type);
+    // }
 
     getDOMElement(id) {
       var DOMElement = document.querySelector('[data-id="' + id + '"]');
@@ -74,7 +85,7 @@ export function oop() {
 
     removeGauge(id) {
       delete this.gauges[id];
-      var DOMElement = getElement(id);
+      var DOMElement = getDOMElement(id);
       DOMElement.remove();
     }
 
