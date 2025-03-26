@@ -23,11 +23,6 @@ export function newResizing() {
     var isRightEdge = pointerXPositionWithinBlock + padding > rect.width;
     var isBottomEdge = pointerYPositionWithinBlock + padding > rect.height;
 
-    // l(isRightEdge);
-
-    // structures.getSomething(id);
-    // l(q);
-
     if (isLeftEdge) {
       targetBlock.classList.add("gauge-resize-left");
       targetBlock.classList.remove("gauge-resize-top");
@@ -63,12 +58,14 @@ export function newResizing() {
   function handleMouseOut(e) {
     var id = e.fromElement.dataset.id;
 
-    var targetBlock = structures.getDOMElement(id);
+    var DOMElement = structures.getDOMElement(id);
 
-    targetBlock.classList.remove("gauge-resize-left");
-    targetBlock.classList.remove("gauge-resize-top");
-    targetBlock.classList.remove("gauge-resize-right");
-    targetBlock.classList.remove("gauge-resize-bottom");
+    if (!DOMElement) return;
+
+    DOMElement.classList.remove("gauge-resize-left");
+    DOMElement.classList.remove("gauge-resize-top");
+    DOMElement.classList.remove("gauge-resize-right");
+    DOMElement.classList.remove("gauge-resize-bottom");
 
     document.removeEventListener("mouseout", handleMouseOutThrottled);
   }
