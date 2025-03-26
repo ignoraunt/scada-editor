@@ -36,7 +36,7 @@ dialog::backdrop {
   background: hsla(0, 0%, 10%, 0.5);
 }
 
-.gauge {
+/* .gauge {
   z-index: 1;
   position: absolute;
   top: 0;
@@ -52,6 +52,25 @@ dialog::backdrop {
   color: hsl(210 50% 90%);
 }
 .gauge:hover {
+  background-color: hsl(210, 12%, 30%);
+} */
+
+div[data-type="gauge"] {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid hsl(210 10% 40%);
+  background-color: hsl(210 10% 27%);
+  height: 45px;
+  width: 135px;
+  font-size: 22px;
+  color: hsl(210 50% 90%);
+}
+div[data-type="gauge"]:hover {
   background-color: hsl(210, 12%, 30%);
 }
 

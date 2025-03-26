@@ -1,6 +1,6 @@
 var l = console.log;
 
-import { structures } from "./elements-resizing.js";
+import { structures } from "./temp-oop-handling.js";
 
 export function contextMenu() {
   function renameBlock(clickedElement) {

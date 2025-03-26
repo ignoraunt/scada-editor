@@ -6,6 +6,8 @@ import { elementsResizing } from "./modules/elements-resizing.js";
 import { contextMenu } from "./modules/context-menu.js";
 import { configurationHandling } from "./modules/configuration-handling.js";
 
+import { oop } from "./modules/temp-oop-handling.js";
+
 (() => {
   var modulesToExecList = [
     backgroundGrid,
@@ -13,6 +15,7 @@ import { configurationHandling } from "./modules/configuration-handling.js";
     elementsResizing,
     contextMenu,
     configurationHandling,
+    oop,
   ];
 
   var i;

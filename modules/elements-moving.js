@@ -1,35 +1,37 @@
 var l = console.log;
 
+import { structures } from "./temp-oop-handling.js";
+
 export var gridStep = 30;
 
 export function elementsMoving() {
-  var activeWrapper = document.querySelector(".active-wrapper");
+  (function handleMovementListeners() {
+    var activeWrapper = document.querySelector(".active-wrapper");
 
-  var wrapperOffsetX = activeWrapper.offsetLeft;
-  var wrapperOffsetY = activeWrapper.offsetTop;
+    var wrapperOffsetX = activeWrapper.offsetLeft;
+    var wrapperOffsetY = activeWrapper.offsetTop;
 
-  var pointerOffsetX = 0;
-  var pointerOffsetY = 0;
+    var pointerOffsetX = 0;
+    var pointerOffsetY = 0;
 
-  function dragStart(e) {
-    l(e)
-    pointerOffsetX = wrapperOffsetX + e.offsetX;
-    pointerOffsetY = wrapperOffsetY + e.offsetY;
-  }
+    function oopStartDrag(e) {
+      pointerOffsetX = wrapperOffsetX + e.offsetX;
+      pointerOffsetY = wrapperOffsetY + e.offsetY;
+    }
 
-  function dragEnd(e) {
-    var blockX = e.x;
-    var blockY = e.y;
+    function handleDragEnd(e) {
+      var id = e.target.dataset.id;
 
-    var gridSnappedX =
-      Math.round((blockX - pointerOffsetX) / gridStep) * gridStep;
-    var gridSnappedY =
-      Math.round((blockY - pointerOffsetY) / gridStep) * gridStep;
+      var elementX = e.x;
+      var elementY = e.y;
 
-    e.toElement.style.left = gridSnappedX + "px";
-    e.toElement.style.top = gridSnappedY + "px";
-  }
+      var x = Math.round((elementX - pointerOffsetX) / gridStep) * gridStep;
+      var y = Math.round((elementY - pointerOffsetY) / gridStep) * gridStep;
 
-  activeWrapper.addEventListener("dragstart", dragStart);
-  activeWrapper.addEventListener("dragend", dragEnd);
+      structures.moveElement(id, x, y);
+    }
+
+    activeWrapper.addEventListener("dragstart", oopStartDrag);
+    activeWrapper.addEventListener("dragend", handleDragEnd);
+  })();
 }
