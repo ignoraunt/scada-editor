@@ -2,10 +2,10 @@ var l = console.log;
 
 import { structures } from "./temp-oop-handling.js";
 
-export var gridStep = 30;
-
 export function elementsMoving() {
   (function handleMovementListeners() {
+    var gridStep = 30;
+
     var activeWrapper = document.querySelector(".active-wrapper");
 
     var wrapperOffsetX = activeWrapper.offsetLeft;
@@ -14,7 +14,7 @@ export function elementsMoving() {
     var pointerOffsetX = 0;
     var pointerOffsetY = 0;
 
-    function oopStartDrag(e) {
+    function handleDragStart(e) {
       pointerOffsetX = wrapperOffsetX + e.offsetX;
       pointerOffsetY = wrapperOffsetY + e.offsetY;
     }
@@ -31,7 +31,7 @@ export function elementsMoving() {
       structures.moveElement(id, x, y);
     }
 
-    activeWrapper.addEventListener("dragstart", oopStartDrag);
+    activeWrapper.addEventListener("dragstart", handleDragStart);
     activeWrapper.addEventListener("dragend", handleDragEnd);
   })();
 }

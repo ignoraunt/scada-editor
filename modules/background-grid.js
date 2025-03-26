@@ -1,9 +1,8 @@
-import { gridStep } from "./elements-moving.js";
-
 export function backgroundGrid() {
   var canvas = document.querySelector(".background-layer-canvas");
   var cs = canvas.getContext("2d");
 
+  var gridStep = 30;
   var activeWrapper = document.querySelector(".active-wrapper");
 
   canvas.width = activeWrapper.clientWidth;

@@ -14,12 +14,11 @@ export function oop() {
     }
 
     move(x, y) {
-      this.x = x;
-      this.y = y;
-
       var DOMElement = document.querySelector('[data-id="' + this.id + '"]');
       DOMElement.remove();
 
+      this.x = x;
+      this.y = y;
       this.pushToDOM();
     }
 
@@ -37,12 +36,32 @@ export function oop() {
 
   class Structures {
     constructor() {
+      this.title = "no name";
       this.wrapper = null;
       this.gauges = {};
     }
 
+    loadState(stateJSON) {
+      this.title = stateJSON.title;
+      this.wrapper = stateJSON.wrapper;
+      this.gauges = stateJSON.gauges;
+    }
+
+    saveState() {
+      return this;
+    }
+
+    logState() {
+      l(this);
+    }
+
     checkElementType(e) {
       l(e.target.dataset.type);
+    }
+
+    getDOMElement(id) {
+      var DOMElement = document.querySelector('[data-id="' + id + '"]');
+      return DOMElement;
     }
 
     moveElement(id, x, y) {
@@ -55,7 +74,7 @@ export function oop() {
 
     removeGauge(id) {
       delete this.gauges[id];
-      var DOMElement = document.querySelector('[data-id="' + id + '"]');
+      var DOMElement = getElement(id);
       DOMElement.remove();
     }
 
@@ -65,24 +84,15 @@ export function oop() {
       DOMElement.innerText = id;
     }
 
-    renderSingleGauge() {
-      //
-    }
-
     renderAllGauges() {
       for (var id in this.gauges) {
         this.gauges[id].pushToDOM();
       }
     }
-
-    logState() {
-      l(this);
-    }
   }
 
   structures = new Structures();
   structures.makeGauge("600112", "gauge", 30, 30);
-  // structures.makeGauge("600114", "gauge", 200, 100, 450, 450);
 
   structures.renderAllGauges();
 
