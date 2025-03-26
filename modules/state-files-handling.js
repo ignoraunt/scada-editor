@@ -1,5 +1,3 @@
-var l = console.log;
-
 import { structures } from "./temp-oop-handling.js";
 import { utils } from "./overarching-utilities.js";
 

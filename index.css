@@ -194,7 +194,7 @@ div[data-type="gauge"]:hover {
   display: none;
 }
 
-.pseudo-label-load-configuration,
+.pseudo-button-load-configuration,
 .button-save-configuration {
   border: none;
   background: hsl(210, 20%, 50%);
@@ -206,7 +206,7 @@ div[data-type="gauge"]:hover {
   box-shadow: 2px 2px 2px #111;
 }
 
-.pseudo-label-load-configuration:hover,
+.pseudo-button-load-configuration:hover,
 .button-save-configuration:hover {
   filter: brightness(110%);
 }

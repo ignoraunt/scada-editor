@@ -52,11 +52,12 @@ export function oop() {
       return this;
     }
 
-    logState() {
-      l(this);
+    inspectState() {
+      console.group("State");
+      console.dir(this);
+      console.groupEnd("State");
     }
 
-    // TODO
     applyState() {
       for (var id in this.gauges) {
         var g = this.gauges[id];
@@ -66,9 +67,9 @@ export function oop() {
       this.renderAllGauges();
     }
 
-    // checkElementType(e) {
-    //   l(e.target.dataset.type);
-    // }
+    getSomething(id) {
+      l(id);
+    }
 
     getDOMElement(id) {
       var DOMElement = document.querySelector('[data-id="' + id + '"]');
@@ -109,7 +110,7 @@ export function oop() {
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "q") {
-      structures.logState();
+      structures.inspectState();
     }
   });
 }
