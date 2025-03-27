@@ -13,7 +13,7 @@ import { newResizing } from "./modules/new-resizing.js";
   var modulesToExecList = [
     backgroundGrid,
     elementsMoving,
-    elementsResizing,
+    // elementsResizing,
     contextMenu,
     configurationHandling,
 

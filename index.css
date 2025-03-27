@@ -215,5 +215,8 @@ div[data-type="gauge"]:hover {
   z-index: 2;
   position: absolute;
   outline: 1px dashed hsl(160, 25%, 45%);
+  /* outline-offset: -2px; */
   background-color: #4411;
+  width: 200px;
+  height: 100px;
 }

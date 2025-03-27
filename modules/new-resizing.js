@@ -1,66 +1,153 @@
 var l = console.log;
 
 import { structures } from "./temp-oop-handling.js";
-
 import { utils } from "./overarching-utilities.js";
 
 export function newResizing() {
-  function handleMouseMove(e) {
-    var id = e.target.dataset.id;
-    var targetBlock = structures.getDOMElement(id);
+  function applyColorByEdge(DOMElement, edge) {
+    switch (edge) {
+      case "left":
+        DOMElement.classList.add("gauge-resize-left");
+        DOMElement.classList.remove("gauge-resize-top");
+        DOMElement.classList.remove("gauge-resize-right");
+        DOMElement.classList.remove("gauge-resize-bottom");
+        break;
 
-    if (!targetBlock) return;
+      case "top":
+        DOMElement.classList.add("gauge-resize-top");
+        DOMElement.classList.remove("gauge-resize-left");
+        DOMElement.classList.remove("gauge-resize-right");
+        DOMElement.classList.remove("gauge-resize-bottom");
+        break;
 
-    var padding = 15;
+      case "right":
+        DOMElement.classList.add("gauge-resize-right");
+        DOMElement.classList.remove("gauge-resize-left");
+        DOMElement.classList.remove("gauge-resize-top");
+        DOMElement.classList.remove("gauge-resize-bottom");
+        break;
 
-    var rect = targetBlock.getBoundingClientRect();
+      case "bottom":
+        DOMElement.classList.add("gauge-resize-bottom");
+        DOMElement.classList.remove("gauge-resize-left");
+        DOMElement.classList.remove("gauge-resize-top");
+        DOMElement.classList.remove("gauge-resize-right");
+        break;
 
-    var pointerXPositionWithinBlock = e.offsetX;
-    var pointerYPositionWithinBlock = e.offsetY;
+      default:
+        DOMElement.classList.remove("gauge-resize-left");
+        DOMElement.classList.remove("gauge-resize-top");
+        DOMElement.classList.remove("gauge-resize-right");
+        DOMElement.classList.remove("gauge-resize-bottom");
+        break;
+    }
+  }
 
-    var isLeftEdge = pointerXPositionWithinBlock < padding;
-    var isTopEdge = pointerYPositionWithinBlock < padding;
-    var isRightEdge = pointerXPositionWithinBlock + padding > rect.width;
-    var isBottomEdge = pointerYPositionWithinBlock + padding > rect.height;
+  function getEdge(e, DOMElement) {
+    var padding = 12;
+
+    var rect = DOMElement.getBoundingClientRect();
+
+    var pointerXPositionWithinElement = e.offsetX;
+    var pointerYPositionWithinElement = e.offsetY;
+
+    var isLeftEdge = pointerXPositionWithinElement < padding;
+    var isTopEdge = pointerYPositionWithinElement < padding;
+    var isRightEdge = pointerXPositionWithinElement + padding > rect.width;
+    var isBottomEdge = pointerYPositionWithinElement + padding > rect.height;
+
+    var edge = "";
 
     if (isLeftEdge) {
-      targetBlock.classList.add("gauge-resize-left");
-      targetBlock.classList.remove("gauge-resize-top");
-      targetBlock.classList.remove("gauge-resize-right");
-      targetBlock.classList.remove("gauge-resize-bottom");
+      edge = "left";
     } else if (isTopEdge) {
-      targetBlock.classList.add("gauge-resize-top");
-      targetBlock.classList.remove("gauge-resize-left");
-      targetBlock.classList.remove("gauge-resize-right");
-      targetBlock.classList.remove("gauge-resize-bottom");
+      edge = "top";
     } else if (isRightEdge) {
-      targetBlock.classList.add("gauge-resize-right");
-      targetBlock.classList.remove("gauge-resize-left");
-      targetBlock.classList.remove("gauge-resize-top");
-      targetBlock.classList.remove("gauge-resize-bottom");
+      edge = "right";
     } else if (isBottomEdge) {
-      targetBlock.classList.add("gauge-resize-bottom");
-      targetBlock.classList.remove("gauge-resize-left");
-      targetBlock.classList.remove("gauge-resize-top");
-      targetBlock.classList.remove("gauge-resize-right");
+      edge = "bottom";
     } else {
-      targetBlock.classList.remove("gauge-resize-left");
-      targetBlock.classList.remove("gauge-resize-top");
-      targetBlock.classList.remove("gauge-resize-right");
-      targetBlock.classList.remove("gauge-resize-bottom");
+      edge = "none";
     }
 
-    document.addEventListener("mouseout", handleMouseOutThrottled, {
+    return edge;
+  }
+
+  function handleMouseMove(e) {
+    var id = e.target.dataset.id;
+
+    if (!id) return;
+
+    var DOMElement = structures.getDOMElement(id);
+
+    var edge = getEdge(e, DOMElement);
+
+    applyColorByEdge(DOMElement, edge);
+
+    // DOMElement.addEventListener("mouseout", handleMouseOutThrottled, {
+    //   once: true,
+    // });
+
+    DOMElement.addEventListener("mousedown", resizeElement, {
       once: true,
     });
+  }
+
+  function letgo() {}
+
+  var nonsense = null;
+
+  function h(e) {
+    phantom(e, nonsense);
+  }
+
+  function phantom(e, div) {
+    div.style.width = e.x + "px";
+
+    function g() {
+      document.removeEventListener("mousemove", h);
+    }
+
+    document.addEventListener("mouseup", g, { once: true });
+  }
+
+  function resizeElement(e) {
+    var id = e.target.dataset.id;
+
+    if (!id) return;
+
+    // var DOMElement = structures.getDOMElement(id);
+
+    var q = structures.getSomething(id);
+
+    var wrap = document.querySelector(".active-wrapper");
+
+    var offl = wrap.offsetLeft;
+    var offt = wrap.offsetTop;
+
+    var div = document.createElement("div");
+
+    nonsense = div;
+
+    div.classList.add("phantom-block");
+
+    div.style.left = offl + q.x + "px";
+    div.style.top = offt + q.y + "px";
+
+    document.body.append(div);
+
+    l(offl + q.x);
+    l(div.offsetLeft);
+
+    document.addEventListener("mousemove", h);
   }
 
   function handleMouseOut(e) {
     var id = e.fromElement.dataset.id;
 
-    var DOMElement = structures.getDOMElement(id);
+    if (!id) return;
 
-    if (!DOMElement) return;
+    var DOMElement = structures.getDOMElement(id);
 
     DOMElement.classList.remove("gauge-resize-left");
     DOMElement.classList.remove("gauge-resize-top");
@@ -74,5 +161,4 @@ export function newResizing() {
   var handleMouseOutThrottled = utils.throttle(handleMouseOut, 25);
 
   document.addEventListener("mousemove", handleMouseMoveThrottled);
-  // document.addEventListener("mouseout", handleMouseOutThrottled);
 }

@@ -6,70 +6,6 @@ export function elementsResizing() {
   var currentBlock = null;
   var targetResizeAxis = "";
 
-  function detectElementEdge(e) {
-    var targetBlock = e.target;
-    var isGauge = targetBlock.classList.contains("gauge");
-
-    if (!isGauge) return;
-
-    var padding = 6;
-    var rect = targetBlock.getBoundingClientRect();
-
-    var pointerXPositionWithinBlock = e.offsetX;
-    var pointerYPositionWithinBlock = e.offsetY;
-
-    var isLeftEdge = pointerXPositionWithinBlock < padding;
-    var isTopEdge = pointerYPositionWithinBlock < padding;
-    var isRightEdge = pointerXPositionWithinBlock + padding > rect.width;
-    var isBottomEdge = pointerYPositionWithinBlock + padding > rect.height;
-
-    if (isLeftEdge) {
-      targetBlock.classList.add("gauge-resize-left");
-      targetBlock.classList.remove("gauge-resize-top");
-      targetBlock.classList.remove("gauge-resize-right");
-      targetBlock.classList.remove("gauge-resize-bottom");
-      currentBlock = targetBlock;
-      targetResizeAxis = "x";
-    } else if (isTopEdge) {
-      targetBlock.classList.add("gauge-resize-top");
-      targetBlock.classList.remove("gauge-resize-left");
-      targetBlock.classList.remove("gauge-resize-right");
-      targetBlock.classList.remove("gauge-resize-bottom");
-      currentBlock = targetBlock;
-      targetResizeAxis = "y";
-    } else if (isRightEdge) {
-      targetBlock.classList.add("gauge-resize-right");
-      targetBlock.classList.remove("gauge-resize-left");
-      targetBlock.classList.remove("gauge-resize-top");
-      targetBlock.classList.remove("gauge-resize-bottom");
-      currentBlock = targetBlock;
-      targetResizeAxis = "x";
-    } else if (isBottomEdge) {
-      targetBlock.classList.add("gauge-resize-bottom");
-      targetBlock.classList.remove("gauge-resize-left");
-      targetBlock.classList.remove("gauge-resize-top");
-      targetBlock.classList.remove("gauge-resize-right");
-      targetResizeAxis = "y";
-    } else {
-      targetBlock.classList.remove("gauge-resize-left");
-      targetBlock.classList.remove("gauge-resize-top");
-      targetBlock.classList.remove("gauge-resize-right");
-      targetBlock.classList.remove("gauge-resize-bottom");
-      targetResizeAxis = "none";
-    }
-  }
-
-  function handleMouseOut(e) {
-    var lastElement = e.fromElement;
-    setTimeout(() => {
-      lastElement.classList.remove("gauge-resize-left");
-      lastElement.classList.remove("gauge-resize-top");
-      lastElement.classList.remove("gauge-resize-right");
-      lastElement.classList.remove("gauge-resize-bottom");
-      targetResizeAxis = "none";
-    }, 25);
-  }
-
   function activateResizing() {
     setTimeout(() => {
       if (!currentBlock) return;
@@ -189,7 +125,7 @@ export function elementsResizing() {
     }
   }
 
-  document.body.addEventListener("mousedown", clickOnEdge);
+  // document.body.addEventListener("mousedown", clickOnEdge);
 
   // document.addEventListener("mousedown", activateResizing);
   // document.addEventListener("mousemove", handleMouseMoveThrottled);

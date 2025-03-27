@@ -13,12 +13,18 @@ export function oop() {
       this.y = y;
     }
 
-    move(x, y) {
+    getDOMElementByID() {
       var DOMElement = document.querySelector('[data-id="' + this.id + '"]');
+      return DOMElement;
+    }
+
+    move(x, y) {
+      var DOMElement = this.getDOMElementByID();
       DOMElement.remove();
 
       this.x = x;
       this.y = y;
+
       this.pushToDOM();
     }
 
@@ -36,7 +42,7 @@ export function oop() {
 
   class Structures {
     constructor() {
-      this.title = "no name";
+      this.title = "no title";
       this.wrapper = null;
       this.gauges = {};
     }
@@ -52,23 +58,23 @@ export function oop() {
       return this;
     }
 
+    applyState() {
+      for (var id in this.gauges) {
+        var gauge = this.gauges[id];
+        this.makeGauge(gauge.id, gauge.type, gauge.x, gauge.y);
+      }
+
+      this.renderAllGauges();
+    }
+
     inspectState() {
       console.group("State");
       console.dir(this);
       console.groupEnd("State");
     }
 
-    applyState() {
-      for (var id in this.gauges) {
-        var g = this.gauges[id];
-        this.makeGauge(g.id, g.type, g.x, g.y);
-      }
-
-      this.renderAllGauges();
-    }
-
     getSomething(id) {
-      l(id);
+      return this.gauges[id];
     }
 
     getDOMElement(id) {
@@ -104,6 +110,10 @@ export function oop() {
   }
 
   structures = new Structures();
+
+  // ==== ==== ====
+  // TESTING AREA
+
   structures.makeGauge("600112", "gauge", 30, 30);
 
   structures.renderAllGauges();
