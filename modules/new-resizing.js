@@ -84,31 +84,26 @@ export function newResizing() {
 
     applyColorByEdge(DOMElement, edge);
 
-    // DOMElement.addEventListener("mouseout", handleMouseOutThrottled, {
-    //   once: true,
-    // });
+    DOMElement.addEventListener("mouseout", handleMouseOutThrottled, {
+      once: true,
+    });
 
     DOMElement.addEventListener("mousedown", resizeElement, {
       once: true,
     });
   }
 
-  function letgo() {}
-
   var nonsense = null;
 
-  function h(e) {
-    phantom(e, nonsense);
+  function g() {
+    l('remove mousemove')
+    document.removeEventListener("mousemove", resizingPhantomElement);
   }
 
-  function phantom(e, div) {
-    div.style.width = e.x + "px";
-
-    function g() {
-      document.removeEventListener("mousemove", h);
-    }
-
-    document.addEventListener("mouseup", g, { once: true });
+  function resizingPhantomElement(e) {
+    l('resizing')
+    nonsense.style.width = e.x + "px";
+    document.addEventListener("mouseup", g);
   }
 
   function resizeElement(e) {
@@ -139,26 +134,21 @@ export function newResizing() {
     l(offl + q.x);
     l(div.offsetLeft);
 
-    document.addEventListener("mousemove", h);
+    document.addEventListener("mousemove", resizingPhantomElement);
   }
 
+  var handleMouseOutThrottled = utils.throttle(handleMouseOut, 25);
   function handleMouseOut(e) {
     var id = e.fromElement.dataset.id;
-
     if (!id) return;
-
     var DOMElement = structures.getDOMElement(id);
-
     DOMElement.classList.remove("gauge-resize-left");
     DOMElement.classList.remove("gauge-resize-top");
     DOMElement.classList.remove("gauge-resize-right");
     DOMElement.classList.remove("gauge-resize-bottom");
-
     document.removeEventListener("mouseout", handleMouseOutThrottled);
   }
 
   var handleMouseMoveThrottled = utils.throttle(handleMouseMove, 25);
-  var handleMouseOutThrottled = utils.throttle(handleMouseOut, 25);
-
   document.addEventListener("mousemove", handleMouseMoveThrottled);
 }
