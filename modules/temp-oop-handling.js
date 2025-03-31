@@ -6,11 +6,14 @@ export function oop() {
   var wrapper = document.querySelector(".active-wrapper");
 
   class Gauge {
-    constructor(id, type, x, y) {
+    constructor(id, type, x, y, width, height) {
       this.id = id;
       this.type = type;
       this.x = x;
       this.y = y;
+
+      this.width = width || 100;
+      this.height = height || 100;
     }
 
     getDOMElementByID() {
@@ -19,6 +22,16 @@ export function oop() {
     }
 
     move(x, y) {
+      // l(x, y);
+
+      var gridStep = 30;
+
+      // var elementX = e.x;
+      // var elementY = e.y;
+
+      x = Math.round(x / gridStep) * gridStep;
+      y = Math.round(y / gridStep) * gridStep;
+
       var DOMElement = this.getDOMElementByID();
       DOMElement.remove();
 
@@ -28,10 +41,24 @@ export function oop() {
       this.pushToDOM();
     }
 
+    resize(width, height) {
+      var DOMElement = this.getDOMElementByID();
+
+      this.width = width;
+      this.height = height;
+
+      DOMElement.style.width = this.width + "px";
+      DOMElement.style.height = this.height + "px";
+    }
+
     pushToDOM() {
       var div = document.createElement("div");
       div.style.left = this.x + "px";
       div.style.top = this.y + "px";
+
+      div.style.width = this.width + "px";
+      div.style.height = this.height + "px";
+
       div.setAttribute("draggable", "true");
       div.dataset.id = this.id;
       div.dataset.type = this.type;
@@ -73,7 +100,7 @@ export function oop() {
       console.groupEnd("State");
     }
 
-    getSomething(id) {
+    getElementRecord(id) {
       return this.gauges[id];
     }
 
@@ -84,6 +111,10 @@ export function oop() {
 
     moveElement(id, x, y) {
       this.gauges[id].move(x, y);
+    }
+
+    resizeElement(id, width, height) {
+      this.gauges[id].resize(width, height);
     }
 
     makeGauge(...params) {
@@ -112,9 +143,8 @@ export function oop() {
   structures = new Structures();
 
   // ==== ==== ====
-  // TESTING AREA
 
-  structures.makeGauge("600112", "gauge", 30, 30);
+  structures.makeGauge("600112", "gauge", 300, 300);
 
   structures.renderAllGauges();
 

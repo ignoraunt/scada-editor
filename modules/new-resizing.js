@@ -4,8 +4,8 @@ import { structures } from "./temp-oop-handling.js";
 import { utils } from "./overarching-utilities.js";
 
 export function newResizing() {
-  function applyColorByEdge(DOMElement, edge) {
-    switch (edge) {
+  function applyColorByEdge(DOMElement, elementEdge) {
+    switch (elementEdge) {
       case "left":
         DOMElement.classList.add("gauge-resize-left");
         DOMElement.classList.remove("gauge-resize-top");
@@ -43,7 +43,10 @@ export function newResizing() {
     }
   }
 
-  function getEdge(e, DOMElement) {
+  var activeEdge = "none";
+  var isResizingActive = false;
+
+  function getElementEdge(e, DOMElement) {
     var padding = 12;
 
     var rect = DOMElement.getBoundingClientRect();
@@ -70,75 +73,102 @@ export function newResizing() {
       edge = "none";
     }
 
+    activeEdge = edge;
+
     return edge;
   }
 
-  function handleMouseMove(e) {
+  function startElementResizing(e) {
     var id = e.target.dataset.id;
-
     if (!id) return;
+    if (activeEdge === "none") return;
 
-    var DOMElement = structures.getDOMElement(id);
+    isResizingActive = true;
 
-    var edge = getEdge(e, DOMElement);
+    var wrapper = document.querySelector(".active-wrapper");
+    var wrapperLeftOffset = wrapper.offsetLeft;
+    var wrapperTopOffset = wrapper.offsetTop;
 
-    applyColorByEdge(DOMElement, edge);
+    var elementRecord = structures.getElementRecord(id);
 
-    DOMElement.addEventListener("mouseout", handleMouseOutThrottled, {
-      once: true,
-    });
+    var phantomElement = document.createElement("div");
+    phantomElement.style.left = elementRecord.x + "px";
+    phantomElement.style.top = elementRecord.y + "px";
+    phantomElement.style.width = elementRecord.width + "px";
+    phantomElement.style.height = elementRecord.height + "px";
+    phantomElement.classList.add("phantom-block");
+    wrapper.append(phantomElement);
 
-    DOMElement.addEventListener("mousedown", resizeElement, {
-      once: true,
-    });
-  }
+    function resizingPhantomElement(e) {
+      var pointerX = e.x;
+      var pointerY = e.y;
+      var leftEdgeDifference = pointerX - wrapperLeftOffset - elementRecord.x;
+      var topEdgeDifference = pointerY - wrapperTopOffset - elementRecord.y;
 
-  var nonsense = null;
+      switch (activeEdge) {
+        case "left":
+          if (leftEdgeDifference > 50) return;
+          phantomElement.style.left = pointerX - wrapperLeftOffset + "px";
+          phantomElement.style.width =
+            wrapperLeftOffset - leftEdgeDifference + "px";
+          break;
 
-  function g() {
-    l('remove mousemove')
-    document.removeEventListener("mousemove", resizingPhantomElement);
-  }
+        case "top":
+          if (topEdgeDifference > 50) return;
+          phantomElement.style.top = pointerY - wrapperTopOffset + "px";
+          phantomElement.style.height =
+            wrapperTopOffset - topEdgeDifference + "px";
+          break;
 
-  function resizingPhantomElement(e) {
-    l('resizing')
-    nonsense.style.width = e.x + "px";
-    document.addEventListener("mouseup", g);
-  }
+        case "right":
+          var newWidth = pointerX - elementRecord.x - wrapperLeftOffset;
+          if (newWidth > 300 || newWidth < 50) return;
+          phantomElement.style.width = newWidth + "px";
+          break;
 
-  function resizeElement(e) {
-    var id = e.target.dataset.id;
+        case "bottom":
+          var newHeight = pointerY - elementRecord.y - wrapperTopOffset;
+          if (newHeight > 300 || newHeight < 50) return;
+          phantomElement.style.height = newHeight + "px";
+          break;
 
-    if (!id) return;
+        default:
+          break;
+      }
 
-    // var DOMElement = structures.getDOMElement(id);
+      document.addEventListener("mouseup", applyResizing);
+    }
 
-    var q = structures.getSomething(id);
+    function applyResizing() {
+      isResizingActive = false;
 
-    var wrap = document.querySelector(".active-wrapper");
+      var phantomElementRect = phantomElement.getBoundingClientRect();
 
-    var offl = wrap.offsetLeft;
-    var offt = wrap.offsetTop;
+      var phantomElementLeft = phantomElementRect.left - wrapperLeftOffset;
+      var phantomElementTop = phantomElementRect.top - wrapperTopOffset;
 
-    var div = document.createElement("div");
+      l(phantomElementLeft, phantomElementTop);
 
-    nonsense = div;
+      var phantomElementWidth = phantomElementRect.width;
+      var phantomElementHeight = phantomElementRect.height;
 
-    div.classList.add("phantom-block");
+      elementRecord.move(phantomElementLeft, phantomElementTop);
+      elementRecord.resize(phantomElementWidth, phantomElementHeight);
 
-    div.style.left = offl + q.x + "px";
-    div.style.top = offt + q.y + "px";
+      phantomElement.remove();
 
-    document.body.append(div);
-
-    l(offl + q.x);
-    l(div.offsetLeft);
+      document.removeEventListener("mousemove", resizingPhantomElement);
+      document.removeEventListener("mouseup", applyResizing);
+    }
 
     document.addEventListener("mousemove", resizingPhantomElement);
   }
 
-  var handleMouseOutThrottled = utils.throttle(handleMouseOut, 25);
-  function handleMouseOut(e) {
+  var handleMouseOutElementThrottled = utils.throttle(
+    handleMouseOutElement,
+    25
+  );
+  function handleMouseOutElement(e) {
     var id = e.fromElement.dataset.id;
     if (!id) return;
     var DOMElement = structures.getDOMElement(id);
@@ -146,9 +176,29 @@ export function newResizing() {
     DOMElement.classList.remove("gauge-resize-top");
     DOMElement.classList.remove("gauge-resize-right");
     DOMElement.classList.remove("gauge-resize-bottom");
-    document.removeEventListener("mouseout", handleMouseOutThrottled);
+    document.removeEventListener("mouseout", handleMouseOutElementThrottled);
+    document.removeEventListener("mousedown", startElementResizing);
   }
 
   var handleMouseMoveThrottled = utils.throttle(handleMouseMove, 25);
+  function handleMouseMove(e) {
+    var id = e.target.dataset.id;
+    if (!id) return;
+    if (isResizingActive) return;
+
+    var DOMElement = structures.getDOMElement(id);
+    var elementEdge = getElementEdge(e, DOMElement);
+
+    applyColorByEdge(DOMElement, elementEdge);
+
+    DOMElement.addEventListener("mouseout", handleMouseOutElementThrottled, {
+      once: true,
+    });
+
+    DOMElement.addEventListener("mousedown", startElementResizing, {
+      once: true,
+    });
+  }
+
   document.addEventListener("mousemove", handleMouseMoveThrottled);
 }

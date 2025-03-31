@@ -22,38 +22,14 @@ body {
 
 .active-wrapper {
   position: relative;
-  border: 2px solid hsl(210, 20%, 30%);
+  outline: 2px solid hsl(210, 20%, 30%);
   height: 800px;
   width: 1000px;
-}
-
-.background-layer-canvas {
-  top: 0;
-  left: 0;
 }
 
 dialog::backdrop {
   background: hsla(0, 0%, 10%, 0.5);
 }
-
-/* .gauge {
-  z-index: 1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid hsl(210 10% 40%);
-  background-color: hsl(210 10% 27%);
-  height: 45px;
-  width: 135px;
-  font-size: 22px;
-  color: hsl(210 50% 90%);
-}
-.gauge:hover {
-  background-color: hsl(210, 12%, 30%);
-} */
 
 div[data-type="gauge"] {
   z-index: 1;
@@ -63,7 +39,8 @@ div[data-type="gauge"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid hsl(210 10% 40%);
+  outline: 1px solid hsl(210 10% 40%);
+  outline-offset: -1px;
   background-color: hsl(210 10% 27%);
   height: 45px;
   width: 135px;
@@ -215,8 +192,5 @@ div[data-type="gauge"]:hover {
   z-index: 2;
   position: absolute;
   outline: 1px dashed hsl(160, 25%, 45%);
-  /* outline-offset: -2px; */
-  background-color: #4411;
-  width: 200px;
-  height: 100px;
+  outline-offset: -1px;
 }

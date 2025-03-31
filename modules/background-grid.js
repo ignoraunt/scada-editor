@@ -5,6 +5,9 @@ export function backgroundGrid() {
   var gridStep = 30;
   var activeWrapper = document.querySelector(".active-wrapper");
 
+  activeWrapper.style.width = 1000 + "px";
+  activeWrapper.style.height = 800 + "px";
+
   canvas.width = activeWrapper.clientWidth;
   canvas.height = activeWrapper.clientHeight;
 
