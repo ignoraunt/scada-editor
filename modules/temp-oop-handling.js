@@ -12,8 +12,8 @@ export function oop() {
       this.x = x;
       this.y = y;
 
-      this.width = width || 100;
-      this.height = height || 100;
+      this.width = width || 90;
+      this.height = height || 90;
     }
 
     getDOMElementByID() {
@@ -22,31 +22,30 @@ export function oop() {
     }
 
     move(x, y) {
-      // l(x, y);
-
       var gridStep = 30;
-
-      // var elementX = e.x;
-      // var elementY = e.y;
 
       x = Math.round(x / gridStep) * gridStep;
       y = Math.round(y / gridStep) * gridStep;
-
-      var DOMElement = this.getDOMElementByID();
-      DOMElement.remove();
 
       this.x = x;
       this.y = y;
 
       this.pushToDOM();
+
+      var DOMElement = this.getDOMElementByID();
+      DOMElement.remove();
     }
 
     resize(width, height) {
-      var DOMElement = this.getDOMElementByID();
+      var gridStep = 30;
+
+      width = Math.round(width / gridStep) * gridStep;
+      height = Math.round(height / gridStep) * gridStep;
 
       this.width = width;
       this.height = height;
 
+      var DOMElement = this.getDOMElementByID();
       DOMElement.style.width = this.width + "px";
       DOMElement.style.height = this.height + "px";
     }
