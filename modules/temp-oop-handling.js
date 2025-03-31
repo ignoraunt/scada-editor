@@ -144,7 +144,7 @@ export function oop() {
 
   // ==== ==== ====
 
-  structures.makeGauge("600112", "gauge", 300, 300);
+  structures.makeGauge("600112", "gauge", 420, 300);
 
   structures.renderAllGauges();
 

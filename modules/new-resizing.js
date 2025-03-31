@@ -89,6 +89,9 @@ export function newResizing() {
     var wrapperLeftOffset = wrapper.offsetLeft;
     var wrapperTopOffset = wrapper.offsetTop;
 
+    var DOMElement = structures.getDOMElement(id);
+    DOMElement.removeAttribute("draggable", "");
+
     var elementRecord = structures.getElementRecord(id);
 
     var phantomElement = document.createElement("div");
@@ -102,33 +105,40 @@ export function newResizing() {
     function resizingPhantomElement(e) {
       var pointerX = e.x;
       var pointerY = e.y;
-      var leftEdgeDifference = pointerX - wrapperLeftOffset - elementRecord.x;
-      var topEdgeDifference = pointerY - wrapperTopOffset - elementRecord.y;
 
       switch (activeEdge) {
         case "left":
-          if (leftEdgeDifference > 50) return;
-          phantomElement.style.left = pointerX - wrapperLeftOffset + "px";
-          phantomElement.style.width =
-            wrapperLeftOffset - leftEdgeDifference + "px";
+          var pointerOffsetX = pointerX - wrapperLeftOffset;
+          var pointerDistance = elementRecord.x - pointerOffsetX;
+          var newWidth = pointerDistance + elementRecord.width;
+
+          if (newWidth < 50 || newWidth > 300) return;
+
+          phantomElement.style.left = pointerOffsetX + "px";
+          phantomElement.style.width = newWidth + "px";
           break;
 
         case "top":
-          if (topEdgeDifference > 50) return;
-          phantomElement.style.top = pointerY - wrapperTopOffset + "px";
-          phantomElement.style.height =
-            wrapperTopOffset - topEdgeDifference + "px";
+          var pointerOffsetY = pointerY - wrapperTopOffset;
+          var pointerDistance = elementRecord.y - pointerOffsetY;
+          var newHeight = pointerDistance + elementRecord.height;
+
+          if (newHeight < 50 || newHeight > 300) return;
+
+          phantomElement.style.top = pointerOffsetY + "px";
+          phantomElement.style.height = newHeight + "px";
+
           break;
 
         case "right":
           var newWidth = pointerX - elementRecord.x - wrapperLeftOffset;
-          if (newWidth > 300 || newWidth < 50) return;
+          if (newWidth < 50 || newWidth > 300) return;
           phantomElement.style.width = newWidth + "px";
           break;
 
         case "bottom":
           var newHeight = pointerY - elementRecord.y - wrapperTopOffset;
-          if (newHeight > 300 || newHeight < 50) return;
+          if (newHeight < 50 || newHeight > 300) return;
           phantomElement.style.height = newHeight + "px";
           break;
 
@@ -143,17 +153,13 @@ export function newResizing() {
       isResizingActive = false;
 
       var phantomElementRect = phantomElement.getBoundingClientRect();
-
       var phantomElementLeft = phantomElementRect.left - wrapperLeftOffset;
       var phantomElementTop = phantomElementRect.top - wrapperTopOffset;
-
-      l(phantomElementLeft, phantomElementTop);
-
       var phantomElementWidth = phantomElementRect.width;
       var phantomElementHeight = phantomElementRect.height;
 
-      elementRecord.move(phantomElementLeft, phantomElementTop);
       elementRecord.resize(phantomElementWidth, phantomElementHeight);
+      elementRecord.move(phantomElementLeft, phantomElementTop);
 
       phantomElement.remove();
 
