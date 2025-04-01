@@ -1,15 +1,16 @@
 var l = console.log;
 
-import { structures } from "./temp-oop-handling.js";
+import { state } from "./general.js";
 
 export function elementsMoving() {
   (function handleMovementListeners() {
-    var gridStep = 30;
+    var settings = state.getSettings();
+    var wrapper = settings.wrapper;
+    var wrapperDOMElement = wrapper.wrapperElement;
+    var gridStep = wrapper.gridStep;
 
-    var activeWrapper = document.querySelector(".active-wrapper");
-
-    var wrapperOffsetX = activeWrapper.offsetLeft;
-    var wrapperOffsetY = activeWrapper.offsetTop;
+    var wrapperOffsetX = wrapperDOMElement.offsetLeft;
+    var wrapperOffsetY = wrapperDOMElement.offsetTop;
 
     var pointerOffsetX = 0;
     var pointerOffsetY = 0;
@@ -28,10 +29,10 @@ export function elementsMoving() {
       var x = Math.round((elementX - pointerOffsetX) / gridStep) * gridStep;
       var y = Math.round((elementY - pointerOffsetY) / gridStep) * gridStep;
 
-      structures.moveElement(id, x, y);
+      state.moveElement(id, x, y);
     }
 
-    activeWrapper.addEventListener("dragstart", handleDragStart);
-    activeWrapper.addEventListener("dragend", handleDragEnd);
+    wrapperDOMElement.addEventListener("dragstart", handleDragStart);
+    wrapperDOMElement.addEventListener("dragend", handleDragEnd);
   })();
 }

@@ -1,6 +1,6 @@
 var l = console.log;
 
-import { structures } from "./temp-oop-handling.js";
+import { state } from "./general.js";
 
 export function contextMenu() {
   function renameBlock(clickedElement) {
@@ -120,7 +120,7 @@ export function contextMenu() {
 
     if (menuAction === "delete") {
       var id = clickedElement.dataset.id;
-      structures.removeGauge(id);
+      state.removeElement(id);
       return;
     }
 

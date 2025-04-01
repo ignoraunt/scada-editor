@@ -1,19 +1,22 @@
 var l = console.log;
 
-export var structures;
+export var state;
 
-export function oop() {
+export function general() {
   var wrapper = document.querySelector(".active-wrapper");
 
-  class Gauge {
+  class Element {
     constructor(id, type, x, y, width, height) {
       this.id = id;
       this.type = type;
       this.x = x;
       this.y = y;
+      this.width = width || 80;
+      this.height = height || 80;
+    }
 
-      this.width = width || 90;
-      this.height = height || 90;
+    getSettings() {
+      return state.settings.wrapper.gridStep;
     }
 
     getDOMElementByID() {
@@ -21,30 +24,27 @@ export function oop() {
       return DOMElement;
     }
 
+    alignToGrid(a, b) {
+      var gridStep = this.getSettings();
+      var aligned = [a, b];
+      aligned[0] = Math.round(a / gridStep) * gridStep;
+      aligned[1] = Math.round(b / gridStep) * gridStep;
+      return aligned;
+    }
+
     move(x, y) {
-      var gridStep = 30;
-
-      x = Math.round(x / gridStep) * gridStep;
-      y = Math.round(y / gridStep) * gridStep;
-
-      this.x = x;
-      this.y = y;
-
+      var aligned = this.alignToGrid(x, y);
+      this.x = aligned[0];
+      this.y = aligned[1];
       this.pushToDOM();
-
       var DOMElement = this.getDOMElementByID();
       DOMElement.remove();
     }
 
     resize(width, height) {
-      var gridStep = 30;
-
-      width = Math.round(width / gridStep) * gridStep;
-      height = Math.round(height / gridStep) * gridStep;
-
-      this.width = width;
-      this.height = height;
-
+      var aligned = this.alignToGrid(width, height);
+      this.width = aligned[0];
+      this.height = aligned[1];
       var DOMElement = this.getDOMElementByID();
       DOMElement.style.width = this.width + "px";
       DOMElement.style.height = this.height + "px";
@@ -54,10 +54,8 @@ export function oop() {
       var div = document.createElement("div");
       div.style.left = this.x + "px";
       div.style.top = this.y + "px";
-
       div.style.width = this.width + "px";
       div.style.height = this.height + "px";
-
       div.setAttribute("draggable", "true");
       div.dataset.id = this.id;
       div.dataset.type = this.type;
@@ -66,17 +64,24 @@ export function oop() {
     }
   }
 
-  class Structures {
+  class State {
     constructor() {
-      this.title = "no title";
-      this.wrapper = null;
-      this.gauges = {};
+      this.settings = {
+        title: "no title",
+        wrapper: {
+          wrapperElement: wrapper,
+          width: 1024,
+          height: 768,
+          gridStep: 20,
+        },
+      };
+      this.elements = {};
     }
 
     loadState(stateJSON) {
-      this.title = stateJSON.title;
+      this.settings = stateJSON.settings;
       this.wrapper = stateJSON.wrapper;
-      this.gauges = stateJSON.gauges;
+      this.elements = stateJSON.elements;
       this.applyState();
     }
 
@@ -85,12 +90,12 @@ export function oop() {
     }
 
     applyState() {
-      for (var id in this.gauges) {
-        var gauge = this.gauges[id];
-        this.makeGauge(gauge.id, gauge.type, gauge.x, gauge.y);
+      for (var id in this.elements) {
+        var element = this.elements[id];
+        this.makeElement(element.id, element.type, element.x, element.y);
       }
 
-      this.renderAllGauges();
+      this.renderAllElements();
     }
 
     inspectState() {
@@ -99,8 +104,12 @@ export function oop() {
       console.groupEnd("State");
     }
 
+    getSettings() {
+      return this.settings;
+    }
+
     getElementRecord(id) {
-      return this.gauges[id];
+      return this.elements[id];
     }
 
     getDOMElement(id) {
@@ -109,47 +118,48 @@ export function oop() {
     }
 
     moveElement(id, x, y) {
-      this.gauges[id].move(x, y);
+      this.elements[id].move(x, y);
     }
 
     resizeElement(id, width, height) {
-      this.gauges[id].resize(width, height);
+      this.elements[id].resize(width, height);
     }
 
-    makeGauge(...params) {
-      this.gauges[params[0]] = new Gauge(...params);
+    makeElement(...params) {
+      this.elements[params[0]] = new Element(...params);
     }
 
-    removeGauge(id) {
-      delete this.gauges[id];
+    removeElement(id) {
+      delete this.elements[id];
       var DOMElement = getDOMElement(id);
       DOMElement.remove();
     }
 
-    changeGaugeID(id) {
+    changeElementID(id) {
       var DOMElement = document.querySelector('[data-id="' + id + '"]');
       DOMElement.dataset.id = id;
       DOMElement.innerText = id;
     }
 
-    renderAllGauges() {
-      for (var id in this.gauges) {
-        this.gauges[id].pushToDOM();
+    renderAllElements() {
+      for (var id in this.elements) {
+        this.elements[id].pushToDOM();
       }
     }
   }
 
-  structures = new Structures();
+  state = new State();
 
   // ==== ==== ====
 
-  structures.makeGauge("600112", "gauge", 420, 300);
+  state.makeElement("600112", "gauge", 80, 80);
+  state.makeElement("700014", "gauge", 240, 80);
 
-  structures.renderAllGauges();
+  state.renderAllElements();
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "q") {
-      structures.inspectState();
+      state.inspectState();
     }
   });
 }

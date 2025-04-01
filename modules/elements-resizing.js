@@ -1,63 +1,39 @@
 var l = console.log;
 
-import { structures } from "./temp-oop-handling.js";
+import { state } from "./general.js";
 import { utils } from "./overarching-utilities.js";
 
-export function newResizing() {
-  function applyColorByEdge(DOMElement, elementEdge) {
-    switch (elementEdge) {
-      case "left":
-        DOMElement.classList.add("gauge-resize-left");
-        DOMElement.classList.remove("gauge-resize-top");
-        DOMElement.classList.remove("gauge-resize-right");
-        DOMElement.classList.remove("gauge-resize-bottom");
-        break;
+export function elementsResizing() {
+  function paintEdgeOnPointer(DOMElement, edge) {
+    var edges = ["left", "top", "right", "bottom"];
 
-      case "top":
-        DOMElement.classList.add("gauge-resize-top");
-        DOMElement.classList.remove("gauge-resize-left");
-        DOMElement.classList.remove("gauge-resize-right");
-        DOMElement.classList.remove("gauge-resize-bottom");
-        break;
-
-      case "right":
-        DOMElement.classList.add("gauge-resize-right");
-        DOMElement.classList.remove("gauge-resize-left");
-        DOMElement.classList.remove("gauge-resize-top");
-        DOMElement.classList.remove("gauge-resize-bottom");
-        break;
-
-      case "bottom":
-        DOMElement.classList.add("gauge-resize-bottom");
-        DOMElement.classList.remove("gauge-resize-left");
-        DOMElement.classList.remove("gauge-resize-top");
-        DOMElement.classList.remove("gauge-resize-right");
-        break;
-
-      default:
-        DOMElement.classList.remove("gauge-resize-left");
-        DOMElement.classList.remove("gauge-resize-top");
-        DOMElement.classList.remove("gauge-resize-right");
-        DOMElement.classList.remove("gauge-resize-bottom");
-        break;
+    var i;
+    for (i = 0; i < edges.length; i++) {
+      var element = edges[i];
+      if (element === edge) {
+        DOMElement.classList.add("gauge-resize-" + edge);
+      } else {
+        DOMElement.classList.remove("gauge-resize-" + element);
+      }
     }
   }
 
   var activeEdge = "none";
-  var isResizingActive = false;
+  var isResizingMode = false;
 
   function getElementEdge(e, DOMElement) {
-    var padding = 12;
+    var edgePadding = 12;
 
     var rect = DOMElement.getBoundingClientRect();
 
     var pointerXPositionWithinElement = e.offsetX;
     var pointerYPositionWithinElement = e.offsetY;
 
-    var isLeftEdge = pointerXPositionWithinElement < padding;
-    var isTopEdge = pointerYPositionWithinElement < padding;
-    var isRightEdge = pointerXPositionWithinElement + padding > rect.width;
-    var isBottomEdge = pointerYPositionWithinElement + padding > rect.height;
+    var isLeftEdge = pointerXPositionWithinElement < edgePadding;
+    var isTopEdge = pointerYPositionWithinElement < edgePadding;
+    var isRightEdge = pointerXPositionWithinElement + edgePadding > rect.width;
+    var isBottomEdge =
+      pointerYPositionWithinElement + edgePadding > rect.height;
 
     var edge = "";
 
@@ -83,16 +59,16 @@ export function newResizing() {
     if (!id) return;
     if (activeEdge === "none") return;
 
-    isResizingActive = true;
+    isResizingMode = true;
 
     var wrapper = document.querySelector(".active-wrapper");
     var wrapperLeftOffset = wrapper.offsetLeft;
     var wrapperTopOffset = wrapper.offsetTop;
 
-    var DOMElement = structures.getDOMElement(id);
+    var DOMElement = state.getDOMElement(id);
     DOMElement.removeAttribute("draggable", "");
 
-    var elementRecord = structures.getElementRecord(id);
+    var elementRecord = state.getElementRecord(id);
 
     var phantomElement = document.createElement("div");
     phantomElement.style.left = elementRecord.x + "px";
@@ -150,7 +126,7 @@ export function newResizing() {
     }
 
     function applyResizing() {
-      isResizingActive = false;
+      isResizingMode = false;
 
       var phantomElementRect = phantomElement.getBoundingClientRect();
       var phantomElementLeft = phantomElementRect.left - wrapperLeftOffset;
@@ -177,7 +153,7 @@ export function newResizing() {
   function handleMouseOutElement(e) {
     var id = e.fromElement.dataset.id;
     if (!id) return;
-    var DOMElement = structures.getDOMElement(id);
+    var DOMElement = state.getDOMElement(id);
     DOMElement.classList.remove("gauge-resize-left");
     DOMElement.classList.remove("gauge-resize-top");
     DOMElement.classList.remove("gauge-resize-right");
@@ -190,12 +166,12 @@ export function newResizing() {
   function handleMouseMove(e) {
     var id = e.target.dataset.id;
     if (!id) return;
-    if (isResizingActive) return;
+    if (isResizingMode) return;
 
-    var DOMElement = structures.getDOMElement(id);
+    var DOMElement = state.getDOMElement(id);
     var elementEdge = getElementEdge(e, DOMElement);
 
-    applyColorByEdge(DOMElement, elementEdge);
+    paintEdgeOnPointer(DOMElement, elementEdge);
 
     DOMElement.addEventListener("mouseout", handleMouseOutElementThrottled, {
       once: true,

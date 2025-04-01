@@ -1,4 +1,4 @@
-import { structures } from "./temp-oop-handling.js";
+import { state } from "./general.js";
 import { utils } from "./overarching-utilities.js";
 
 export function configurationHandling() {
@@ -9,7 +9,7 @@ export function configurationHandling() {
     var savedStateFile = loadInput.files[0];
     savedStateFile.text().then((stateString) => {
       var stateJSON = JSON.parse(stateString);
-      structures.loadState(stateJSON);
+      state.loadState(stateJSON);
     });
   }
 
@@ -32,7 +32,7 @@ export function configurationHandling() {
   }
 
   function handleSaving() {
-    var stateJSON = structures.saveState();
+    var stateJSON = state.saveState();
     var stateString = JSON.stringify(stateJSON, null, 2);
     var stateBlob = new Blob([stateString], {
       type: "application/json",

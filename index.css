@@ -22,9 +22,16 @@ body {
 
 .active-wrapper {
   position: relative;
+  opacity: 1;
   outline: 2px solid hsl(210, 20%, 30%);
-  height: 800px;
-  width: 1000px;
+  /* height: 800px;
+  width: 1000px; */
+  transition: opacity 1200ms ease-in-out;
+}
+
+.active-wrapper.invisible {
+  opacity: 0;
+  transition: opacity 1200ms ease-in-out;
 }
 
 dialog::backdrop {
