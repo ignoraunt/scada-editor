@@ -4,8 +4,10 @@ import { state } from "./general.js";
 import { pointedID } from "./elements-resizing.js";
 
 export function contextMenu() {
-  function renameBlock(clickedElement) {
-    if (!clickedElement.classList.contains("gauge")) return;
+  function renameBlock(clickedElement, elementType) {
+    // debugger
+    l("inside", elementType);
+    if (elementType !== "gauge") return;
 
     var isGaugeNew = clickedElement.classList.contains("new-gauge");
 
@@ -26,6 +28,7 @@ export function contextMenu() {
     input.focus();
 
     function applyRenaming() {
+      debugger
       clickedElement.innerText = input.value;
       clickedElement.classList.remove("new-gauge");
       isGaugeNew = false;
@@ -42,13 +45,14 @@ export function contextMenu() {
     }
 
     function handleBlur(e) {
+      debugger
       var key = e.key;
       if (key === "Escape" || key === "Enter") {
         applyRenaming();
       }
     }
 
-    input.addEventListener("blur", applyRenaming, { once: true });
+    // input.addEventListener("blur", applyRenaming, { once: true });
     document.addEventListener("keydown", handleBlur);
   }
 
@@ -56,8 +60,8 @@ export function contextMenu() {
   //   // ... ... ...
   // }
 
-  function removeBlock(clickedElement) {
-    clickedElement.remove();
+  function removeBlock(pointedID) {
+    state.removeElement(pointedID);
   }
 
   function createBlock(clickedElement, pointerPosition) {
@@ -97,14 +101,20 @@ export function contextMenu() {
     }
   }
 
-  function action(clickedElement, pointedID, pointerPosition, menuAction) {
+  function action(
+    clickedElement,
+    pointedID,
+    pointerPosition,
+    menuAction,
+    elementType
+  ) {
     if (menuAction === "create") {
       createBlock(clickedElement, pointerPosition);
       return;
     }
 
     if (menuAction === "rename") {
-      renameBlock(clickedElement);
+      renameBlock(clickedElement, elementType);
       return;
     }
 
@@ -114,8 +124,7 @@ export function contextMenu() {
     // }
 
     if (menuAction === "delete") {
-      // var id = clickedElement.dataset.id;
-      state.removeElement(pointedID);
+      removeBlock(pointedID);
       return;
     }
 
@@ -163,10 +172,17 @@ export function contextMenu() {
       clickedElement,
       pointedID,
       pointerPosition,
-      menuAction
+      menuAction,
+      elementType
     ) {
       closeMenuWindow();
-      action(clickedElement, pointedID, pointerPosition, menuAction);
+      action(
+        clickedElement,
+        pointedID,
+        pointerPosition,
+        menuAction,
+        elementType
+      );
     }
 
     function makeMenuWindow(
@@ -191,6 +207,8 @@ export function contextMenu() {
 
       document.body.append(menuWindow);
 
+      l("a", elementType);
+
       menu = menuWindow;
       isMenuOpen = true;
 
@@ -198,14 +216,14 @@ export function contextMenu() {
       menu.addEventListener(
         "mousedown",
         (e) => {
-          debugger
           var pointerPosition = [e.x, e.y];
           var menuAction = e.target.dataset.action;
           handleMenuClick(
             clickedDOMElement,
             pointedID,
             pointerPosition,
-            menuAction
+            menuAction,
+            elementType
           );
         },
         { once: true }
@@ -245,7 +263,6 @@ export function contextMenu() {
   })();
 
   document.addEventListener("contextmenu", handleContexMenu);
-
   document.addEventListener("dblclick", (e) => {
     var clickedElement = e.target;
     renameBlock(clickedElement);
