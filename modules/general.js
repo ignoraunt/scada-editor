@@ -33,8 +33,6 @@ export function general() {
     }
 
     move(x, y) {
-      debugger;
-
       var alignedCoordinates = this.alignToGrid(x, y);
 
       var updatedX = alignedCoordinates[0];
@@ -141,6 +139,7 @@ export function general() {
       var newElement = new Element(...params);
       this.elements[params[0]] = newElement;
       this.elements[params[0]].pushToDOM();
+      this.elements[params[0]].move(params[2], params[3]);
     }
 
     removeElement(id) {

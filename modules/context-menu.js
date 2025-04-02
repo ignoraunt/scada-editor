@@ -60,20 +60,14 @@ export function contextMenu() {
   }
 
   function createBlock(clickedElement, pointerPosition) {
-    var activeWrapper = document.querySelector(".active-wrapper");
-    var activeWrapperOffsetX = activeWrapper.offsetLeft;
-    var activeWrapperOffsetY = activeWrapper.offsetTop;
+    var settings = state.getSettings();
+    var wrapper = settings.wrapper;
+    var wrapperDOMElement = wrapper.wrapperElement;
 
-    var div = document.createElement("div");
-    div.classList.add("gauge");
-    div.classList.add("new-gauge");
-    div.innerText = "- - -";
-    div.draggable = "true";
-    div.style.left = pointerPosition[0] - activeWrapperOffsetX + "px";
-    div.style.top = pointerPosition[1] - activeWrapperOffsetY + "px";
-    div.style.width = 135 + "px";
-    div.style.height = 45 + "px";
-    activeWrapper.append(div);
+    var pointerOffsetPosX = pointerPosition[0] - wrapperDOMElement.offsetLeft;
+    var pointerOffsetPosY = pointerPosition[1] - wrapperDOMElement.offsetTop;
+
+    state.makeElement("000001", "gauge", pointerOffsetPosX, pointerOffsetPosY);
   }
 
   // function insertPicture() {
@@ -237,6 +231,7 @@ export function contextMenu() {
   })();
 
   document.addEventListener("contextmenu", handleContexMenu);
+
   document.addEventListener("dblclick", (e) => {
     var clickedElement = e.target;
     renameBlock(clickedElement);
