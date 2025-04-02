@@ -58,12 +58,12 @@ div[data-type="gauge"]:hover {
   background-color: hsl(210, 12%, 30%);
 }
 
-.selected-gauge {
-  outline: 1px dashed hsl(160 100% 80%);
-  background-color: hsl(210, 12%, 30%);
+div[data-type="gauge"].selected-gauge {
+  /* outline: 1px dashed hsl(160 100% 80%); */
+  background-color: hsl(160 100% 80%);
 }
-.selected-gauge:hover {
-  background-color: hsl(210, 12%, 30%);
+div[data-type="gauge"].selected-gauge:hover {
+  background-color: hsl(160 100% 80%);
 }
 
 .new-gauge {
@@ -199,5 +199,6 @@ div[data-type="gauge"]:hover {
   z-index: 2;
   position: absolute;
   outline: 1px dashed hsl(160, 25%, 45%);
+  background-color: hsl(160deg 20% 30% / 50%);
   outline-offset: -1px;
 }
