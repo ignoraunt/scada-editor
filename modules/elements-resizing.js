@@ -57,7 +57,10 @@ export function elementsResizing() {
   }
 
   function startElementResizing(e) {
+    if (e.button !== 0) return;
+
     var id = e.target.dataset.id;
+
     if (!id) return;
     if (activeEdge === "none") return;
 
@@ -137,7 +140,7 @@ export function elementsResizing() {
       var phantomElementHeight = phantomElementRect.height;
 
       DOMElement.setAttribute("draggable", "true");
-      
+
       elementRecord.resize(phantomElementWidth, phantomElementHeight);
       elementRecord.move(phantomElementLeft, phantomElementTop);
 
@@ -165,6 +168,7 @@ export function elementsResizing() {
     DOMElement.classList.remove("gauge-resize-top");
     DOMElement.classList.remove("gauge-resize-right");
     DOMElement.classList.remove("gauge-resize-bottom");
+
     document.removeEventListener("mouseout", handleMouseOutElementThrottled);
     document.removeEventListener("mousedown", startElementResizing);
   }
