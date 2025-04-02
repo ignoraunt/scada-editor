@@ -200,4 +200,5 @@ div[data-type="gauge"]:hover {
   position: absolute;
   outline: 1px dashed hsl(160, 25%, 45%);
   outline-offset: -1px;
+  background-color: hsl(160deg 20% 30% / 50%);
 }
