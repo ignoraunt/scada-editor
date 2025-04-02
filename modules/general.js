@@ -3,8 +3,6 @@ var l = console.log;
 export var state;
 
 export function general() {
-  var wrapper = document.querySelector(".active-wrapper");
-
   class Element {
     constructor(id, type, x, y, width, height) {
       this.id = id;
@@ -70,6 +68,9 @@ export function general() {
       div.dataset.id = this.id;
       div.dataset.type = this.type;
       div.innerText = this.id;
+
+      var wrapper = state.settings.wrapper.wrapperElement;
+
       wrapper.append(div);
     }
   }
@@ -79,7 +80,7 @@ export function general() {
       this.settings = {
         title: "no title",
         wrapper: {
-          wrapperElement: wrapper,
+          wrapperElement: null,
           width: 1024,
           height: 768,
           gridStep: 20,
@@ -88,11 +89,29 @@ export function general() {
       this.elements = {};
     }
 
+    instantiateWrapper(width, height) {
+      var wrapper = document.createElement("div");
+      wrapper.classList.add("active-wrapper");
+      wrapper.classList.add("invisible");
+      document.body.append(wrapper);
+
+      var canvas = document.createElement("canvas");
+      canvas.classList.add("background-layer-canvas");
+      wrapper.append(canvas);
+
+      var stateWrapper = this.settings.wrapper;
+
+      stateWrapper.width = width;
+      stateWrapper.height = height;
+
+      stateWrapper.wrapperElement = wrapper;
+    }
+
     loadState(stateJSON) {
-      this.settings = stateJSON.settings;
-      this.wrapper = stateJSON.wrapper;
-      this.elements = stateJSON.elements;
-      this.applyState();
+      // this.settings = stateJSON.settings;
+      // this.wrapper = stateJSON.wrapper;
+      // this.elements = stateJSON.elements;
+      // this.applyState();
     }
 
     saveState() {
@@ -119,11 +138,15 @@ export function general() {
     }
 
     getElementRecord(id) {
-      return this.elements[id];
+      return this.elements[id] || "nope";
+    }
+
+    getElementType(id) {
+      return this.elements[id].type || "unknown type";
     }
 
     getDOMElement(id) {
-      var DOMElement = document.querySelector('[data-id="' + id + '"]');
+      var DOMElement = document.querySelector('[data-id="' + id + '"]') || null;
       return DOMElement;
     }
 
@@ -167,8 +190,7 @@ export function general() {
 
   state = new State();
 
-  // ==== ==== ====
-
+  state.instantiateWrapper(800, 800);
   state.makeElement("600112", "gauge", 80, 80);
   state.makeElement("700014", "gauge", 240, 80);
 
