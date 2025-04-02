@@ -1,6 +1,7 @@
 var l = console.log;
 
 import { state } from "./general.js";
+import { pointedID } from "./elements-resizing.js";
 
 export function contextMenu() {
   function renameBlock(clickedElement) {
@@ -96,7 +97,7 @@ export function contextMenu() {
     }
   }
 
-  function action(clickedElement, pointerPosition, menuAction) {
+  function action(clickedElement, pointedID, pointerPosition, menuAction) {
     if (menuAction === "create") {
       createBlock(clickedElement, pointerPosition);
       return;
@@ -113,8 +114,8 @@ export function contextMenu() {
     // }
 
     if (menuAction === "delete") {
-      var id = clickedElement.dataset.id;
-      state.removeElement(id);
+      // var id = clickedElement.dataset.id;
+      state.removeElement(pointedID);
       return;
     }
 
@@ -142,6 +143,7 @@ export function contextMenu() {
 
   var handleContexMenu = (() => {
     var isMenuOpen = false;
+    var lastClickedElement = null;
     var menu = null;
 
     var menuOptions = {
@@ -151,32 +153,39 @@ export function contextMenu() {
         // ["Скопировать", "copy"],
         ["Удалить", "delete"],
       ],
-      canvas: [
+      wrapper: [
         ["Создать элемент", "create"],
         ["Добавить изображение", "picture"],
       ],
     };
 
-    function handleMenuClick(clickedElement, pointerPosition, menuAction) {
+    function handleMenuClick(
+      clickedElement,
+      pointedID,
+      pointerPosition,
+      menuAction
+    ) {
       closeMenuWindow();
-      action(clickedElement, pointerPosition, menuAction);
+      action(clickedElement, pointedID, pointerPosition, menuAction);
     }
 
-    function makeMenuWindow(clickedElement, pointerPosition) {
-      var isTargetGauge = clickedElement.classList.contains("gauge");
-      var clickedElementType = isTargetGauge ? "gauge" : "canvas";
-
+    function makeMenuWindow(
+      clickedDOMElement,
+      pointedID,
+      elementType,
+      pointerPosition
+    ) {
       var menuWindow = document.createElement("div");
       menuWindow.classList.add("context-menu");
       menuWindow.style.left = pointerPosition[0] + "px";
       menuWindow.style.top = pointerPosition[1] + "px";
 
       var i;
-      for (i = 0; i < menuOptions[clickedElementType].length; i++) {
+      for (i = 0; i < menuOptions[elementType].length; i++) {
         var menuItem = document.createElement("div");
         menuItem.classList.add("context-menu-item");
-        menuItem.innerHTML = menuOptions[clickedElementType][i][0];
-        menuItem.dataset.action = menuOptions[clickedElementType][i][1];
+        menuItem.innerHTML = menuOptions[elementType][i][0];
+        menuItem.dataset.action = menuOptions[elementType][i][1];
         menuWindow.append(menuItem);
       }
 
@@ -185,24 +194,28 @@ export function contextMenu() {
       menu = menuWindow;
       isMenuOpen = true;
 
-      document.addEventListener("click", closeMenuWindow, { once: true });
+      document.addEventListener("mousedown", closeMenuWindow, { once: true });
       menu.addEventListener(
-        "click",
+        "mousedown",
         (e) => {
+          debugger
           var pointerPosition = [e.x, e.y];
           var menuAction = e.target.dataset.action;
-          handleMenuClick(clickedElement, pointerPosition, menuAction);
+          handleMenuClick(
+            clickedDOMElement,
+            pointedID,
+            pointerPosition,
+            menuAction
+          );
         },
         { once: true }
       );
     }
 
     function closeMenuWindow() {
-      // TODO better to check just a single element
-      var gauges = document.querySelectorAll(".gauge");
-      gauges.forEach((el) => {
-        el.classList.remove("selected-gauge");
-      });
+      if (lastClickedElement) {
+        lastClickedElement.classList.remove("selected-gauge");
+      }
 
       menu.remove();
       isMenuOpen = false;
@@ -211,20 +224,21 @@ export function contextMenu() {
     var f = (e) => {
       e.preventDefault();
 
-      var clickedElement = e.target;
+      var clickedElement = state.getDOMElement(pointedID);
+      var type = clickedElement ? state.getElementType(pointedID) : "wrapper";
       var pointerPosition = [e.x, e.y];
 
-      var isTargetGauge = clickedElement.classList.contains("gauge");
-      var isTargetNewGauge = clickedElement.classList.contains("new-gauge");
-
-      if (isTargetGauge && !isTargetNewGauge)
+      if (type !== "wrapper") {
         clickedElement.classList.add("selected-gauge");
+      }
+
+      lastClickedElement = clickedElement;
 
       if (isMenuOpen) {
         closeMenuWindow();
       }
 
-      makeMenuWindow(clickedElement, pointerPosition);
+      makeMenuWindow(clickedElement, pointedID, type, pointerPosition);
     };
 
     return f;
