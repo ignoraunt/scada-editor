@@ -138,11 +138,11 @@ export function general() {
     }
 
     getElementRecord(id) {
-      return this.elements[id] || "nope";
+      return this.elements[id];
     }
 
     getElementType(id) {
-      return this.elements[id].type || "unknown type";
+      return this.elements[id].type;
     }
 
     getDOMElement(id) {
