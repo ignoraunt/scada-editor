@@ -11,7 +11,9 @@ export function backgroundGrid() {
   var wrapperDOMElement = wrapper.wrapperElement;
   var gridStep = wrapper.gridStep;
 
-  wrapperDOMElement.classList.remove("invisible");
+  setTimeout(() => {
+    wrapperDOMElement.classList.remove("invisible");
+  });
 
   wrapperDOMElement.style.width = wrapper.width + "px";
   wrapperDOMElement.style.height = wrapper.height + "px";
