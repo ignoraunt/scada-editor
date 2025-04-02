@@ -3,8 +3,10 @@ var l = console.log;
 import { state } from "./general.js";
 import { utils } from "./overarching-utilities.js";
 
+export var pointedID = "nope";
+
 export function elementsResizing() {
-  function paintEdgeOnPointer(DOMElement, edge) {
+  function addColoredEdge(DOMElement, edge) {
     var edges = ["left", "top", "right", "bottom"];
 
     var i;
@@ -134,6 +136,8 @@ export function elementsResizing() {
       var phantomElementWidth = phantomElementRect.width;
       var phantomElementHeight = phantomElementRect.height;
 
+      DOMElement.setAttribute("draggable", "true");
+      
       elementRecord.resize(phantomElementWidth, phantomElementHeight);
       elementRecord.move(phantomElementLeft, phantomElementTop);
 
@@ -153,6 +157,9 @@ export function elementsResizing() {
   function handleMouseOutElement(e) {
     var id = e.fromElement.dataset.id;
     if (!id) return;
+
+    pointedID = "nope";
+
     var DOMElement = state.getDOMElement(id);
     DOMElement.classList.remove("gauge-resize-left");
     DOMElement.classList.remove("gauge-resize-top");
@@ -165,13 +172,15 @@ export function elementsResizing() {
   var handleMouseMoveThrottled = utils.throttle(handleMouseMove, 25);
   function handleMouseMove(e) {
     var id = e.target.dataset.id;
+    pointedID = id;
+
     if (!id) return;
     if (isResizingMode) return;
 
     var DOMElement = state.getDOMElement(id);
     var elementEdge = getElementEdge(e, DOMElement);
 
-    paintEdgeOnPointer(DOMElement, elementEdge);
+    addColoredEdge(DOMElement, elementEdge);
 
     DOMElement.addEventListener("mouseout", handleMouseOutElementThrottled, {
       once: true,
