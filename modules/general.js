@@ -33,6 +33,8 @@ export function general() {
     }
 
     move(x, y) {
+      debugger;
+
       var alignedCoordinates = this.alignToGrid(x, y);
 
       var updatedX = alignedCoordinates[0];
@@ -136,10 +138,9 @@ export function general() {
     }
 
     makeElement(...params) {
-      this.elements[params[0]] = new Element(...params);
-      // var element = new Element(...params);
-      // this.elements[params[0]] = element;
-      // this.elements[params[0]].pushToDOM();
+      var newElement = new Element(...params);
+      this.elements[params[0]] = newElement;
+      this.elements[params[0]].pushToDOM();
     }
 
     removeElement(id) {
@@ -171,8 +172,6 @@ export function general() {
 
   state.makeElement("600112", "gauge", 80, 80);
   state.makeElement("700014", "gauge", 240, 80);
-
-  state.renderAllElements();
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "q") {
