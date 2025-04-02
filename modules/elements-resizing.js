@@ -72,6 +72,7 @@ export function elementsResizing() {
 
     var DOMElement = state.getDOMElement(id);
     DOMElement.removeAttribute("draggable", "");
+    DOMElement.style.pointerEvents = "none";
 
     var elementRecord = state.getElementRecord(id);
 
@@ -140,6 +141,7 @@ export function elementsResizing() {
       var phantomElementHeight = phantomElementRect.height;
 
       DOMElement.setAttribute("draggable", "true");
+      DOMElement.style.pointerEvents = "initial";
 
       elementRecord.resize(phantomElementWidth, phantomElementHeight);
       elementRecord.move(phantomElementLeft, phantomElementTop);
