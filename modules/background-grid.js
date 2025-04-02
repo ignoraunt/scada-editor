@@ -28,7 +28,7 @@ export function backgroundGrid() {
   cs.rect(0, 0, canvas.width, canvas.height);
   cs.fill();
   cs.strokeStyle = "hsl(0, 0%, 10%)";
-  cs.lineWidth = 1;
+  cs.lineWidth = 0.5;
 
   var i;
   for (i = 1; i < horizontalLinesCount; i++) {
