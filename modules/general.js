@@ -167,7 +167,7 @@ export function general() {
 
     removeElement(id) {
       delete this.elements[id];
-      var DOMElement = getDOMElement(id);
+      var DOMElement = this.getDOMElement(id);
       DOMElement.remove();
     }
 
