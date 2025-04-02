@@ -24,8 +24,6 @@ body {
   position: relative;
   opacity: 1;
   outline: 2px solid hsl(210, 20%, 30%);
-  /* height: 800px;
-  width: 1000px; */
   transition: opacity 1200ms ease-in-out;
 }
 
@@ -58,11 +56,11 @@ div[data-type="gauge"]:hover {
   background-color: hsl(210, 12%, 30%);
 }
 
-.selected-gauge {
-  outline: 1px dashed hsl(160 100% 80%);
+div[data-type="gauge"].selected-gauge {
+  outline: 1px dashed hsl(160 80% 70%);
   background-color: hsl(210, 12%, 30%);
 }
-.selected-gauge:hover {
+div[data-type="gauge"].selected-gauge:hover {
   background-color: hsl(210, 12%, 30%);
 }
 
@@ -200,5 +198,5 @@ div[data-type="gauge"]:hover {
   position: absolute;
   outline: 1px dashed hsl(160, 25%, 45%);
   outline-offset: -1px;
-  background-color: hsl(160deg 20% 30% / 50%);
+  background-color: hsl(160 20% 30% / 50%);
 }
