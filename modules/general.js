@@ -33,21 +33,31 @@ export function general() {
     }
 
     move(x, y) {
-      var aligned = this.alignToGrid(x, y);
-      this.x = aligned[0];
-      this.y = aligned[1];
-      this.pushToDOM();
+      var alignedCoordinates = this.alignToGrid(x, y);
+
+      var updatedX = alignedCoordinates[0];
+      var updatedY = alignedCoordinates[1];
+
+      this.x = updatedX;
+      this.y = updatedY;
+
       var DOMElement = this.getDOMElementByID();
-      DOMElement.remove();
+      DOMElement.style.left = updatedX + "px";
+      DOMElement.style.top = updatedY + "px";
     }
 
     resize(width, height) {
-      var aligned = this.alignToGrid(width, height);
-      this.width = aligned[0];
-      this.height = aligned[1];
+      var alignedCoordinates = this.alignToGrid(width, height);
+
+      var updatedWidth = alignedCoordinates[0];
+      var updatedHeight = alignedCoordinates[1];
+
+      this.width = updatedWidth;
+      this.height = updatedHeight;
+
       var DOMElement = this.getDOMElementByID();
-      DOMElement.style.width = this.width + "px";
-      DOMElement.style.height = this.height + "px";
+      DOMElement.style.width = updatedWidth + "px";
+      DOMElement.style.height = updatedHeight + "px";
     }
 
     pushToDOM() {
@@ -127,6 +137,9 @@ export function general() {
 
     makeElement(...params) {
       this.elements[params[0]] = new Element(...params);
+      // var element = new Element(...params);
+      // this.elements[params[0]] = element;
+      // this.elements[params[0]].pushToDOM();
     }
 
     removeElement(id) {
@@ -139,6 +152,10 @@ export function general() {
       var DOMElement = document.querySelector('[data-id="' + id + '"]');
       DOMElement.dataset.id = id;
       DOMElement.innerText = id;
+    }
+
+    renderSingleElement(id) {
+      this.elements[id].pushToDOM();
     }
 
     renderAllElements() {
