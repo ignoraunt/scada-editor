@@ -204,8 +204,8 @@ export function general() {
   state = new State();
 
   state.instantiateWrapper(800, 800);
-  state.makeElement("600112", "gauge", 40, 40);
-  state.makeElement("700014", "gauge", 200, 40);
+  state.makeElement("", "gauge", 40, 40);
+  state.makeElement("", "gauge", 200, 40);
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "q") {
