@@ -9,8 +9,8 @@ export function general() {
       this.type = type;
       this.x = x;
       this.y = y;
-      this.width = width || 80;
-      this.height = height || 80;
+      this.width = width || 100;
+      this.height = height || 60;
     }
 
     getSettings() {
@@ -191,8 +191,8 @@ export function general() {
   state = new State();
 
   state.instantiateWrapper(800, 800);
-  state.makeElement("600112", "gauge", 80, 80);
-  state.makeElement("700014", "gauge", 240, 80);
+  state.makeElement("600112", "gauge", 40, 40);
+  state.makeElement("700014", "gauge", 200, 40);
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "q") {
