@@ -160,9 +160,10 @@ export function general() {
 
     makeElement(...params) {
       var newElement = new Element(...params);
-      this.elements[params[0]] = newElement;
-      this.elements[params[0]].pushToDOM();
-      this.elements[params[0]].move(params[2], params[3]);
+      var id = params[0];
+      this.elements[id] = newElement;
+      this.elements[id].pushToDOM();
+      this.elements[id].move(params[2], params[3]);
     }
 
     removeElement(id) {
