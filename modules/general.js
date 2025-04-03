@@ -160,10 +160,13 @@ export function general() {
 
     makeElement(...params) {
       var newElement = new Element(...params);
-      var id = params[0];
+      var id = params[0] || this.generateID();
+      var x = params[2];
+      var y = params[3];
       this.elements[id] = newElement;
+      this.elements[id].id = id;
       this.elements[id].pushToDOM();
-      this.elements[id].move(params[2], params[3]);
+      this.elements[id].move(x, y);
     }
 
     removeElement(id) {
@@ -186,6 +189,15 @@ export function general() {
       for (var id in this.elements) {
         this.elements[id].pushToDOM();
       }
+    }
+
+    generateID() {
+      function gen() {
+        var r = ((Math.random() + 1) * 0x10000) | 0;
+        var rr = r.toString(16).substring(2);
+        return rr;
+      }
+      return gen() + "-" + gen();
     }
   }
 
