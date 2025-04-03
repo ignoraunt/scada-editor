@@ -4,40 +4,35 @@ import { state } from "./general.js";
 import { pointedID } from "./elements-resizing.js";
 
 export function contextMenu() {
-  function renameBlock(clickedElement, elementType) {
-    // debugger
-    l("inside", elementType);
-    if (elementType !== "gauge") return;
+  function renameBlock(args) {
+    var element = args.element;
+    var type = args.type;
 
-    var isGaugeNew = clickedElement.classList.contains("new-gauge");
+    if (type !== "gauge") return;
 
-    var initialValue = clickedElement.innerText;
-    clickedElement.innerText = "";
+    var initialValue = element.innerText;
+    element.innerText = "";
 
     var input = document.createElement("input");
     input.classList.add("gauge-renaming-input");
+    input.value = initialValue;
 
-    if (isGaugeNew) {
-      input.value = "";
-    } else {
-      input.value = initialValue;
-    }
+    element.removeAttribute("draggable");
+    element.append(input);
 
-    clickedElement.removeAttribute("draggable");
-    clickedElement.append(input);
-    input.focus();
+    // TODO find out whats's happening here
+    setTimeout(() => {
+      input.focus();
+    });
 
     function applyRenaming() {
-      debugger
-      clickedElement.innerText = input.value;
-      clickedElement.classList.remove("new-gauge");
-      isGaugeNew = false;
-      clickedElement.setAttribute("draggable", "true");
+      element.innerText = input.value;
+      element.classList.remove("new-gauge");
+      element.setAttribute("draggable", "true");
 
-      if (input.value === "" || isGaugeNew) {
-        clickedElement.innerText = initialValue;
-        clickedElement.classList.add("new-gauge");
-        isGaugeNew = true;
+      if (input.value === "") {
+        element.innerText = initialValue;
+        element.classList.add("new-gauge");
       }
 
       input.remove();
@@ -45,102 +40,76 @@ export function contextMenu() {
     }
 
     function handleBlur(e) {
-      debugger
       var key = e.key;
       if (key === "Escape" || key === "Enter") {
         applyRenaming();
       }
     }
 
-    // input.addEventListener("blur", applyRenaming, { once: true });
+    input.addEventListener("blur", applyRenaming, { once: true });
     document.addEventListener("keydown", handleBlur);
   }
 
-  // function copyBlock(e, target) {
-  //   // ... ... ...
-  // }
-
-  function removeBlock(pointedID) {
-    state.removeElement(pointedID);
+  function removeBlock(args) {
+    state.removeElement(args.id);
   }
 
-  function createBlock(clickedElement, pointerPosition) {
+  function createBlock(args) {
     var settings = state.getSettings();
     var wrapper = settings.wrapper;
     var wrapperDOMElement = wrapper.wrapperElement;
 
-    var pointerOffsetPosX = pointerPosition[0] - wrapperDOMElement.offsetLeft;
-    var pointerOffsetPosY = pointerPosition[1] - wrapperDOMElement.offsetTop;
+    var pointerOffsetPosX = args.pointer[0] - wrapperDOMElement.offsetLeft;
+    var pointerOffsetPosY = args.pointer[1] - wrapperDOMElement.offsetTop;
 
-    state.makeElement("000001", "gauge", pointerOffsetPosX, pointerOffsetPosY);
+    state.makeElement("", "gauge", pointerOffsetPosX, pointerOffsetPosY);
   }
 
-  // function insertPicture() {
-  //   var img = document.createElement("img");
-  //   img.src = "./turbine.jpg";
-  //   var src = document.createElement("div");
-  //   src.style.position = "absolute";
-  //   src.style.left = "200px";
-  //   src.style.top = "200px";
-  //   src.append(img);
-  //   document.body.append(src);
-  // }
-
-  function selectColor(clickedElement, pickedColor, dialog) {
+  function selectColor(args) {
     var colors = {
       magenta: "hsl(300 30% 30%)",
       green: "hsl(160 30% 30%)",
       orange: "hsl(40 30% 30%)",
     };
 
-    var isPickerOption = pickedColor.classList.contains("color-sample");
+    var isPickerOption = args.color.classList.contains("color-sample");
 
     if (isPickerOption) {
-      clickedElement.style.backgroundColor = colors[pickedColor.dataset.color];
-      dialog.close();
+      args.element.style.backgroundColor = colors[args.color.dataset.color];
+      args.dialog.close();
     }
   }
 
-  function action(
-    clickedElement,
-    pointedID,
-    pointerPosition,
-    menuAction,
-    elementType
-  ) {
-    if (menuAction === "create") {
-      createBlock(clickedElement, pointerPosition);
+  function action(args) {
+    if (args.action === "create") {
+      createBlock(args);
       return;
     }
 
-    if (menuAction === "rename") {
-      renameBlock(clickedElement, elementType);
+    if (args.action === "rename") {
+      renameBlock(args);
       return;
     }
 
-    // if (act === "copy") {
-    //   copyBlock(target,pointerPosition);
-    //   return
-    // }
-
-    if (menuAction === "delete") {
-      removeBlock(pointedID);
+    if (args.action === "copy") {
+      copyBlock(args);
       return;
     }
 
-    // if (menuAction === "picture") {
-    //   insertPicture(clickedElement, pointerPosition);
-    //   return;
-    // }
+    if (args.action === "delete") {
+      removeBlock(args);
+      return;
+    }
 
-    if (menuAction === "palette") {
+    if (args.action === "palette") {
       var dialog = document.querySelector(".palette");
       dialog.showModal();
       dialog.addEventListener(
         "click",
         (e) => {
-          var pickedColor = e.target;
-          selectColor(clickedElement, pickedColor, dialog);
+          args.color = e.target;
+          args.dialog = dialog;
+          selectColor(args);
         },
         {
           once: true,
@@ -159,7 +128,7 @@ export function contextMenu() {
       gauge: [
         ["Изменить идентификатор", "rename"],
         ["Изменить цвет", "palette"],
-        // ["Скопировать", "copy"],
+        ["Скопировать", "copy"],
         ["Удалить", "delete"],
       ],
       wrapper: [
@@ -168,46 +137,30 @@ export function contextMenu() {
       ],
     };
 
-    function handleMenuClick(
-      clickedElement,
-      pointedID,
-      pointerPosition,
-      menuAction,
-      elementType
-    ) {
+    function handleMenuClick(args) {
       closeMenuWindow();
-      action(
-        clickedElement,
-        pointedID,
-        pointerPosition,
-        menuAction,
-        elementType
-      );
+      action(args);
     }
 
-    function makeMenuWindow(
-      clickedDOMElement,
-      pointedID,
-      elementType,
-      pointerPosition
-    ) {
+    function makeMenuWindow(args) {
+      var pointer = args.pointer;
+      var type = args.type;
+
       var menuWindow = document.createElement("div");
       menuWindow.classList.add("context-menu");
-      menuWindow.style.left = pointerPosition[0] + "px";
-      menuWindow.style.top = pointerPosition[1] + "px";
+      menuWindow.style.left = pointer[0] + "px";
+      menuWindow.style.top = pointer[1] + "px";
 
       var i;
-      for (i = 0; i < menuOptions[elementType].length; i++) {
+      for (i = 0; i < menuOptions[type].length; i++) {
         var menuItem = document.createElement("div");
         menuItem.classList.add("context-menu-item");
-        menuItem.innerHTML = menuOptions[elementType][i][0];
-        menuItem.dataset.action = menuOptions[elementType][i][1];
+        menuItem.innerHTML = menuOptions[type][i][0];
+        menuItem.dataset.action = menuOptions[type][i][1];
         menuWindow.append(menuItem);
       }
 
       document.body.append(menuWindow);
-
-      l("a", elementType);
 
       menu = menuWindow;
       isMenuOpen = true;
@@ -216,15 +169,9 @@ export function contextMenu() {
       menu.addEventListener(
         "mousedown",
         (e) => {
-          var pointerPosition = [e.x, e.y];
-          var menuAction = e.target.dataset.action;
-          handleMenuClick(
-            clickedDOMElement,
-            pointedID,
-            pointerPosition,
-            menuAction,
-            elementType
-          );
+          args.pointer = [e.x, e.y];
+          args.action = e.target.dataset.action;
+          handleMenuClick(args);
         },
         { once: true }
       );
@@ -242,29 +189,34 @@ export function contextMenu() {
     var f = (e) => {
       e.preventDefault();
 
-      var clickedElement = state.getDOMElement(pointedID);
-      var type = clickedElement ? state.getElementType(pointedID) : "wrapper";
+      var targetDOMElement = state.getDOMElement(pointedID);
+      var targetElementType = targetDOMElement
+        ? state.getElementType(pointedID)
+        : "wrapper";
       var pointerPosition = [e.x, e.y];
 
-      if (type !== "wrapper") {
-        clickedElement.classList.add("selected-gauge");
-      }
+      lastClickedElement = targetDOMElement;
 
-      lastClickedElement = clickedElement;
+      var args = {
+        element: targetDOMElement,
+        id: pointedID,
+        type: targetElementType,
+        pointer: pointerPosition,
+      };
+
+      if (targetElementType !== "wrapper") {
+        targetDOMElement.classList.add("selected-gauge");
+      }
 
       if (isMenuOpen) {
         closeMenuWindow();
       }
 
-      makeMenuWindow(clickedElement, pointedID, type, pointerPosition);
+      makeMenuWindow(args);
     };
 
     return f;
   })();
 
   document.addEventListener("contextmenu", handleContexMenu);
-  document.addEventListener("dblclick", (e) => {
-    var clickedElement = e.target;
-    renameBlock(clickedElement);
-  });
 }
