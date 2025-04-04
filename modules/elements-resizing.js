@@ -66,7 +66,7 @@ export function elementsResizing() {
 
     isResizingMode = true;
 
-    var wrapper = document.querySelector(".active-wrapper");
+    var wrapper = document.querySelector(".user-wrapper");
     var wrapperLeftOffset = wrapper.offsetLeft;
     var wrapperTopOffset = wrapper.offsetTop;
 

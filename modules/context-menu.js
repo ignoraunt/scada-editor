@@ -20,7 +20,7 @@ export function contextMenu() {
     element.removeAttribute("draggable");
     element.append(input);
 
-    // TODO find out whats's happening here
+    // TODO better to find out whats's happening here
     setTimeout(() => {
       input.focus();
     });
@@ -29,6 +29,10 @@ export function contextMenu() {
       element.innerText = input.value;
       element.classList.remove("new-gauge");
       element.setAttribute("draggable", "true");
+      element.dataset.dbId = input.value;
+
+      var a = state.getElementRecord(args.id);
+      a.dbId = input.value;
 
       if (input.value === "") {
         element.innerText = initialValue;
@@ -55,6 +59,9 @@ export function contextMenu() {
   }
 
   function createBlock(args) {
+
+    console.dir(args)
+    
     var settings = state.getSettings();
     var wrapper = settings.wrapper;
     var wrapperDOMElement = wrapper.wrapperElement;
@@ -62,7 +69,14 @@ export function contextMenu() {
     var pointerOffsetPosX = args.pointer[0] - wrapperDOMElement.offsetLeft;
     var pointerOffsetPosY = args.pointer[1] - wrapperDOMElement.offsetTop;
 
-    state.makeElement("", "gauge", pointerOffsetPosX, pointerOffsetPosY);
+    var elementArgs = {
+      id: "",
+      type: "gauge",
+      x: pointerOffsetPosX,
+      y: pointerOffsetPosY,
+    }
+    
+    state.makeElement(elementArgs);
   }
 
   function selectColor(args) {
@@ -102,7 +116,7 @@ export function contextMenu() {
     }
 
     if (args.action === "palette") {
-      var dialog = document.querySelector(".palette");
+      var dialog = document.querySelector(".palette-dialog");
       dialog.showModal();
       dialog.addEventListener(
         "click",

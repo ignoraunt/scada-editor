@@ -4,18 +4,27 @@ import { state } from "./general.js";
 
 export function elementsMoving() {
   (function handleMovementListeners() {
-    var settings = state.getSettings();
-    var wrapper = settings.wrapper;
-    var wrapperDOMElement = wrapper.wrapperElement;
-    var gridStep = wrapper.gridStep;
-
-    var wrapperOffsetX = wrapperDOMElement.offsetLeft;
-    var wrapperOffsetY = wrapperDOMElement.offsetTop;
-
+    var wrapperDOMElement = null;
+    var wrapperOffsetX = 0;
+    var wrapperOffsetY = 0;
     var pointerOffsetX = 0;
     var pointerOffsetY = 0;
+    var gridStep = 0;
+
+    function updateWrapperPos() {
+      var settings = state.getSettings();
+      var wrapper = settings.wrapper;
+      wrapperDOMElement = wrapper.wrapperElement;
+      gridStep = wrapper.gridStep;
+
+      wrapperOffsetX = wrapperDOMElement.offsetLeft;
+      wrapperOffsetY = wrapperDOMElement.offsetTop;
+    }
+
+    updateWrapperPos();
 
     function handleDragStart(e) {
+      updateWrapperPos();
       pointerOffsetX = wrapperOffsetX + e.offsetX;
       pointerOffsetY = wrapperOffsetY + e.offsetY;
     }

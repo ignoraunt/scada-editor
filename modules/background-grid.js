@@ -1,32 +1,12 @@
-var l = console.log;
-
-import { state } from "./general.js";
-
-export function backgroundGrid() {
-  var canvas = document.querySelector(".background-layer-canvas");
-  var cs = canvas.getContext("2d");
-
-  var settings = state.getSettings();
-  var wrapper = settings.wrapper;
-  var wrapperDOMElement = wrapper.wrapperElement;
-  var gridStep = wrapper.gridStep;
-
-  setTimeout(() => {
-    wrapperDOMElement.classList.remove("invisible");
-  });
-
-  wrapperDOMElement.style.width = wrapper.width + "px";
-  wrapperDOMElement.style.height = wrapper.height + "px";
-
-  canvas.width = wrapperDOMElement.clientWidth;
-  canvas.height = wrapperDOMElement.clientHeight;
-
+export function fillBackgroundCanvas(canvas, gridStep) {
   var horizontalLinesCount = Math.floor(canvas.width) / gridStep;
   var verticalLinesCount = Math.floor(canvas.height) / gridStep;
 
+  var cs = canvas.getContext("2d");
+
   cs.clearRect(0, 0, canvas.width, canvas.height);
   cs.beginPath();
-  cs.fillStyle = "hsl(210, 18%, 22%)";
+  cs.fillStyle = "hsl(210, 14%, 16%)";
   cs.rect(0, 0, canvas.width, canvas.height);
   cs.fill();
   cs.strokeStyle = "hsl(0, 0%, 10%)";

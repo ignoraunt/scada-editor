@@ -20,21 +20,40 @@ body {
   overflow: hidden;
 }
 
-.active-wrapper {
-  position: relative;
-  opacity: 1;
-  outline: 2px solid hsl(210, 20%, 30%);
-  transition: opacity 1200ms ease-in-out;
-}
-
-.active-wrapper.invisible {
-  opacity: 0;
-  transition: opacity 1200ms ease-in-out;
+p {
+  margin: 0;
+  padding: 0;
 }
 
 dialog::backdrop {
   background: hsla(0, 0%, 10%, 0.5);
 }
+
+.title {
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 8px;
+  margin: 0;
+  padding: 2px;
+  font-size: 26px;
+  color: inherit;
+  color: hsl(210, 20%, 40%);
+}
+
+.user-wrapper {
+  position: relative;
+  outline: 2px solid hsl(210, 15%, 20%);
+  transition: opacity 800ms ease-in;
+}
+
+.user-wrapper.invisible {
+  opacity: 0;
+  transition: opacity 800ms ease-in;
+}
+
+/* ------------ */
+/* gauges style */
 
 div[data-type="gauge"] {
   z-index: 1;
@@ -128,14 +147,14 @@ div[data-type="gauge"].selected-gauge:hover {
   border-bottom: none;
 }
 
-.palette {
+.palette-dialog {
   outline: none;
   border: 1px solid hsl(160 50% 40% / 50%);
   background: hsl(0 0% 100% / 10%);
   padding: 10px;
 }
 
-.palette .wrapper {
+.palette-dialog-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -147,11 +166,9 @@ div[data-type="gauge"].selected-gauge:hover {
   height: 30px;
   width: 30px;
 }
-
 .color-sample:hover {
   filter: brightness(110%);
 }
-
 .color-sample[data-color="magenta"] {
   background-color: hsl(300, 50%, 30%);
 }
@@ -162,34 +179,109 @@ div[data-type="gauge"].selected-gauge:hover {
   background-color: hsl(40, 50%, 30%);
 }
 
-.temp-buttons-block {
-  z-index: 1;
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
+.configuration-menu-dialog {
+  outline: none;
+  border: 1px solid hsl(210 10% 40%);
+  background: hsl(0 0% 100% / 10%);
+  background-color: hsl(210 10% 27%);
+  max-width: 600px;
+  min-width: 400px;
+  padding: 12px;
+  color: hsl(210 50% 90%);
+}
+
+.configuration-menu-dialog-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  gap: 4px;
+}
+
+input {
+  outline: none;
+  border: none;
+  background-color: hsl(210 10% 30%);
+  padding: 6px 8px;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  box-shadow: inset 1px 1px 1px #333;
+}
+
+input:hover {
+  background-color: hsl(210 10% 34%);
+}
+
+input:focus {
+  outline: 1px dashed hsl(160 40% 40%);
+}
+
+input::selection {
+  background-color: hsl(160 40% 40%);
+}
+
+input[name="conf-cancel-button"] {
+  background-color: hsl(0 22% 28%);
+}
+
+input[name="conf-save-button"] {
+  background-color: hsl(160 22% 28%);
+}
+
+input[name="conf-cancel-button"]:hover {
+  background-color: hsl(0 22% 32%);
+}
+
+input[name="conf-save-button"]:hover {
+  background-color: hsl(160 22% 32%);
+}
+
+.configuration-menu-buttons-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  width: 100%;
+  gap: 12px;
+}
+
+.buttons-block {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: hsla(160, 0%, 12%);
+  width: 100%;
+  padding: 4px;
+  gap: 16px;
 }
 
 .input-load-configuration {
   display: none;
 }
 
-.pseudo-button-load-configuration,
-.button-save-configuration {
+.buttons-block input,
+.buttons-block label {
+  outline: none;
   border: none;
-  background: hsl(210, 20%, 50%);
-  padding: 4px 8px;
-  font-family: monospace;
-  font-size: 20px;
-  color: #222;
+  background: hsl(210, 20%, 40%);
+  padding: 4px 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #222324;
   cursor: pointer;
-  box-shadow: 2px 2px 2px #111;
+  border-radius: 4px;
+  box-shadow: none;
 }
 
-.pseudo-button-load-configuration:hover,
-.button-save-configuration:hover {
+.buttons-block input:hover,
+.buttons-block label:hover {
   filter: brightness(110%);
 }
 

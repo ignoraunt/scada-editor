@@ -8,24 +8,61 @@
     <title>Конструктор мнемосхем</title>
   </head>
   <body>
-    <dialog class="palette">
-      <div class="wrapper">
+    <h1 class="title"></h1>
+
+    <dialog class="palette-dialog">
+      <div class="palette-dialog-wrapper">
         <div class="color-sample" data-color="magenta"></div>
         <div class="color-sample" data-color="green"></div>
         <div class="color-sample" data-color="orange"></div>
       </div>
     </dialog>
 
-    <div class="temp-buttons-block">
+    <dialog class="configuration-menu-dialog">
+      <div class="configuration-menu-dialog-wrapper">
+        <label
+          >Заголовок
+          <input type="text" name="conf-title" id="" />
+        </label>
+
+        <label
+          >Ширина рабочей области
+          <input type="text" name="conf-wrapper-width" id="" />
+        </label>
+
+        <label
+          >Высота рабочей области
+          <input type="text" name="conf-wrapper-height" id="" />
+        </label>
+
+        <label
+          >Шаг сетки
+          <input type="text" name="conf-wrapper-gridstep" id="" />
+        </label>
+
+        <div class="configuration-menu-buttons-wrapper">
+          <input type="button" name="conf-cancel-button" value="отменить" />
+
+          <input type="button" name="conf-save-button" value="сохранить" />
+        </div>
+      </div>
+    </dialog>
+
+    <div class="buttons-block">
       <input
-        class="button-save-configuration"
+        class="button-edit-configuration"
         type="button"
-        value="сохранить"
+        value="настройки"
       />
       <label class="pseudo-button-load-configuration">
         загрузить
         <input class="input-load-configuration" type="file" />
       </label>
+      <input
+        class="button-save-configuration"
+        type="button"
+        value="сохранить"
+      />
     </div>
   </body>
 </html>

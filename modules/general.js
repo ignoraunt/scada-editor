@@ -1,16 +1,19 @@
 var l = console.log;
 
+import { fillBackgroundCanvas } from "./background-grid.js";
+
 export var state;
 
 export function general() {
   class Element {
-    constructor(id, type, x, y, width, height) {
+    constructor(id, type, x, y, width, height, name) {
       this.id = id;
       this.type = type;
       this.x = x;
       this.y = y;
       this.width = width || 100;
       this.height = height || 60;
+      this.dbId = name || "0";
     }
 
     getSettings() {
@@ -28,6 +31,11 @@ export function general() {
       aligned[0] = Math.round(a / gridStep) * gridStep;
       aligned[1] = Math.round(b / gridStep) * gridStep;
       return aligned;
+    }
+
+    rename() {
+      var DOMElement = this.getDOMElementByID();
+      DOMElement.innerText = this.dbId;
     }
 
     move(x, y) {
@@ -67,9 +75,10 @@ export function general() {
       div.setAttribute("draggable", "true");
       div.dataset.id = this.id;
       div.dataset.type = this.type;
-      div.innerText = this.id;
+      div.innerText = this.dbId;
 
-      var wrapper = state.settings.wrapper.wrapperElement;
+      // var wrapper = state.settings.wrapper.wrapperElement;
+      var wrapper = document.querySelector(".user-wrapper");
 
       wrapper.append(div);
     }
@@ -78,7 +87,7 @@ export function general() {
   class State {
     constructor() {
       this.settings = {
-        title: "no title",
+        title: "Нет заголовка",
         wrapper: {
           wrapperElement: null,
           width: 1024,
@@ -90,28 +99,56 @@ export function general() {
     }
 
     instantiateWrapper(width, height) {
-      var wrapper = document.createElement("div");
-      wrapper.classList.add("active-wrapper");
-      wrapper.classList.add("invisible");
-      document.body.append(wrapper);
+      // var wrapperElement = this.settings.wrapper.wrapperElement;
+      var wrapperElement = document.querySelector(".user-wrapper");
+      var wrapperSettings = this.settings.wrapper;
 
-      var canvas = document.createElement("canvas");
-      canvas.classList.add("background-layer-canvas");
-      wrapper.append(canvas);
+      var width = width || wrapperSettings.width;
+      var height = height || wrapperSettings.height;
 
-      var stateWrapper = this.settings.wrapper;
+      var title = document.querySelector(".title");
+      title.innerText = this.settings.title;
 
-      stateWrapper.width = width;
-      stateWrapper.height = height;
+      if (wrapperElement) {
+        wrapperElement.classList.add("invisible");
 
-      stateWrapper.wrapperElement = wrapper;
+        wrapperElement.style.width = width + "px";
+        wrapperElement.style.height = height + "px";
+
+        wrapperSettings.width = width;
+        wrapperSettings.height = height;
+
+        var canvas = document.querySelector("canvas");
+        canvas.width = width;
+        canvas.height = height;
+      } else {
+        wrapperElement = document.createElement("div");
+        wrapperElement.classList.add("user-wrapper");
+        wrapperElement.classList.add("invisible");
+        wrapperElement.style.width = width + "px";
+        wrapperElement.style.height = height + "px";
+        document.body.append(wrapperElement);
+
+        wrapperSettings.width = width;
+        wrapperSettings.height = height;
+        wrapperSettings.wrapperElement = wrapperElement;
+
+        var canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        wrapperElement.append(canvas);
+      }
+      fillBackgroundCanvas(canvas, wrapperSettings.gridStep);
+
+      setTimeout(() => {
+        wrapperElement.classList.remove("invisible");
+      });
     }
 
     loadState(stateJSON) {
-      // this.settings = stateJSON.settings;
-      // this.wrapper = stateJSON.wrapper;
-      // this.elements = stateJSON.elements;
-      // this.applyState();
+      this.settings = stateJSON.settings;
+      this.elements = stateJSON.elements;
+      this.applyState();
     }
 
     saveState() {
@@ -119,12 +156,28 @@ export function general() {
     }
 
     applyState() {
-      for (var id in this.elements) {
-        var element = this.elements[id];
-        this.makeElement(element.id, element.type, element.x, element.y);
-      }
+      this.instantiateWrapper();
 
-      this.renderAllElements();
+      var wrapper = document.querySelector(".user-wrapper");
+      var canvas = document.querySelector("canvas");
+      wrapper.innerHTML = "";
+      wrapper.append(canvas);
+
+      for (var id in this.elements) {
+        var el = this.elements[id];
+
+        var arg = {
+          id: el.id,
+          type: el.type,
+          x: el.x,
+          y: el.y,
+          width: el.width,
+          height: el.height,
+          name: el.dbId,
+        };
+
+        this.makeElement(arg);
+      }
     }
 
     inspectState() {
@@ -158,15 +211,23 @@ export function general() {
       this.elements[id].resize(width, height);
     }
 
-    makeElement(...params) {
-      var newElement = new Element(...params);
-      var id = params[0] || this.generateID();
-      var x = params[2];
-      var y = params[3];
+    makeElement(args) {
+      var id = args.id || this.generateID();
+      var type = args.type;
+      var x = args.x;
+      var y = args.y;
+      var width = args.width || 100;
+      var height = args.height || 60;
+      var name = args.name;
+
+      var newElement = new Element(id, type, x, y, width, height, name);
+
       this.elements[id] = newElement;
       this.elements[id].id = id;
       this.elements[id].pushToDOM();
       this.elements[id].move(x, y);
+      this.elements[id].resize(width, height);
+      this.elements[id].rename(name);
     }
 
     removeElement(id) {
@@ -204,8 +265,15 @@ export function general() {
   state = new State();
 
   state.instantiateWrapper(800, 800);
-  state.makeElement("", "gauge", 40, 40);
-  state.makeElement("", "gauge", 200, 40);
+
+  var mockElementState = {
+    id: "",
+    type: "gauge",
+    x: 40,
+    y: 40,
+  };
+
+  state.makeElement(mockElementState);
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "q") {
