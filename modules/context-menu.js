@@ -59,9 +59,8 @@ export function contextMenu() {
   }
 
   function createBlock(args) {
+    console.dir(args);
 
-    console.dir(args)
-    
     var settings = state.getSettings();
     var wrapper = settings.wrapper;
     var wrapperDOMElement = wrapper.wrapperElement;
@@ -74,8 +73,8 @@ export function contextMenu() {
       type: "gauge",
       x: pointerOffsetPosX,
       y: pointerOffsetPosY,
-    }
-    
+    };
+
     state.makeElement(elementArgs);
   }
 
@@ -204,21 +203,14 @@ export function contextMenu() {
       e.preventDefault();
 
       var targetDOMElement = state.getDOMElement(pointedID);
-      var targetElementType = targetDOMElement
+      var targetType = targetDOMElement
         ? state.getElementType(pointedID)
         : "wrapper";
       var pointerPosition = [e.x, e.y];
 
       lastClickedElement = targetDOMElement;
 
-      var args = {
-        element: targetDOMElement,
-        id: pointedID,
-        type: targetElementType,
-        pointer: pointerPosition,
-      };
-
-      if (targetElementType !== "wrapper") {
+      if (targetType !== "wrapper") {
         targetDOMElement.classList.add("selected-gauge");
       }
 
@@ -226,11 +218,24 @@ export function contextMenu() {
         closeMenuWindow();
       }
 
+      var args = {
+        element: targetDOMElement,
+        id: pointedID,
+        type: targetType,
+        pointer: pointerPosition,
+      };
+
       makeMenuWindow(args);
     };
 
     return f;
   })();
 
-  document.addEventListener("contextmenu", handleContexMenu);
+  function disableContexMenu(e) {
+    e.preventDefault();
+  }
+
+  var wrapper = state.settings.wrapper.wrapperElement;
+  wrapper.addEventListener("contextmenu", handleContexMenu);
+  document.addEventListener("contextmenu", disableContexMenu);
 }
