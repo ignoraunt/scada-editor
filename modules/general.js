@@ -163,6 +163,8 @@ export function general() {
       wrapper.innerHTML = "";
       wrapper.append(canvas);
 
+      this.settings.wrapper.wrapperElement = wrapper;
+
       for (var id in this.elements) {
         var el = this.elements[id];
 
@@ -204,6 +206,7 @@ export function general() {
     }
 
     moveElement(id, x, y) {
+      l(id, x);
       this.elements[id].move(x, y);
     }
 

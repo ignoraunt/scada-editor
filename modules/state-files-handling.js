@@ -13,23 +13,50 @@ export function configurationHandling() {
     });
   }
 
-  function saveFile(stateBlob) {
-    showSaveFilePicker({
-      suggestedName: utils.getCurrentDateTimeString(),
-    })
-      .then((handle) => {
-        return handle.createWritable();
-      })
-      .then((stream) => {
-        stream.write(stateBlob);
-        stream.close();
-      })
-      .catch((err) => {
-        if (err.name !== "AbortError") {
-          console.error(err.name, err.message);
+  var saveFile = (() => {
+    var blobHref = null;
+
+    return (stateBlob) => {
+      var fileName = utils.getCurrentDateTimeString();
+
+      showSaveFilePicker ? FSApiCall() : fallback();
+
+      function fallback() {
+        if (blobHref) {
+          window.URL.revokeObjectURL(blobHref);
         }
-      });
-  }
+
+        blobHref = window.URL.createObjectURL(stateBlob);
+
+        var anchor = document.createElement("a");
+        anchor.setAttribute("download", fileName);
+        anchor.href = blobHref;
+        document.body.appendChild(anchor);
+
+        var event = new MouseEvent("click");
+        anchor.dispatchEvent(event);
+        anchor.remove();
+      }
+
+      function FSApiCall() {
+        showSaveFilePicker({
+          suggestedName: utils.getCurrentDateTimeString() + ".json",
+        })
+          .then((handle) => {
+            return handle.createWritable();
+          })
+          .then((stream) => {
+            stream.write(stateBlob);
+            stream.close();
+          })
+          .catch((err) => {
+            if (err.name !== "AbortError") {
+              console.error(err.name, err.message);
+            }
+          });
+      }
+    };
+  })();
 
   function handleSaving() {
     var stateJSON = state.saveState();
