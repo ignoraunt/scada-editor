@@ -15,7 +15,7 @@ export function configurationHandling() {
 
   function saveFile(stateBlob) {
     showSaveFilePicker({
-      suggestedName: utils.getStateDate(),
+      suggestedName: utils.getCurrentDateTimeString(),
     })
       .then((handle) => {
         return handle.createWritable();

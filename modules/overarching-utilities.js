@@ -11,7 +11,7 @@ export var utils = {
     };
   },
 
-  getStateDate: function () {
+  getCurrentDateTimeString: function () {
     var date = new Date();
     var y = date.getFullYear();
     var m = (date.getMonth() + 1).toString().padStart(2, "0");
