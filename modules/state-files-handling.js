@@ -19,7 +19,7 @@ export function configurationHandling() {
     return (stateBlob) => {
       var fileName = utils.getCurrentDateTimeString();
 
-      showSaveFilePicker ? FSApiCall() : fallback();
+      showSaveFilePicker ? FSAApi() : fallback();
 
       function fallback() {
         if (blobHref) {
@@ -38,7 +38,7 @@ export function configurationHandling() {
         anchor.remove();
       }
 
-      function FSApiCall() {
+      function FSAApi() {
         showSaveFilePicker({
           suggestedName: utils.getCurrentDateTimeString() + ".json",
         })
