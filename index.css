@@ -20,6 +20,7 @@ body {
   overflow: hidden;
 }
 
+h1,
 p {
   margin: 0;
   padding: 0;
@@ -27,18 +28,6 @@ p {
 
 dialog::backdrop {
   background: hsla(0, 0%, 10%, 0.5);
-}
-
-.title {
-  z-index: 2;
-  position: absolute;
-  top: 0;
-  left: 8px;
-  margin: 0;
-  padding: 2px;
-  font-size: 26px;
-  color: inherit;
-  color: hsl(210, 20%, 40%);
 }
 
 .user-wrapper {
@@ -249,39 +238,52 @@ input[name="conf-save-button"]:hover {
   gap: 12px;
 }
 
-.buttons-block {
+.menu-bar {
   z-index: 1;
   position: absolute;
   top: 0;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: hsl(210, 10%, 12%);
+  width: 100%;
+  padding: 8px 16px;
+}
+
+.menu-bar-buttons {
+  display: flex;
   justify-content: center;
   align-items: center;
-  background-color: hsla(160, 0%, 12%);
-  width: 100%;
-  padding: 4px;
-  gap: 16px;
+  gap: 4px;
+}
+
+.title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: normal;
+  color: inherit;
+  color: hsl(210, 20%, 40%);
 }
 
 .input-load-configuration {
   display: none;
 }
 
-.buttons-block input,
-.buttons-block label {
+.menu-bar input,
+.menu-bar label {
   outline: none;
   border: none;
+  border-radius: 4px;
   background: hsl(210, 20%, 40%);
-  padding: 4px 12px;
+  padding: 4px 12px 6px;
   font-size: 18px;
-  font-weight: 700;
   color: #222324;
   cursor: pointer;
-  border-radius: 4px;
   box-shadow: none;
 }
 
-.buttons-block input:hover,
-.buttons-block label:hover {
+.menu-bar input:hover,
+.menu-bar label:hover {
   filter: brightness(110%);
 }
 

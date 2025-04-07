@@ -8,8 +8,6 @@
     <title>Конструктор мнемосхем</title>
   </head>
   <body>
-    <h1 class="title"></h1>
-
     <dialog class="palette-dialog">
       <div class="palette-dialog-wrapper">
         <div class="color-sample" data-color="magenta"></div>
@@ -48,21 +46,24 @@
       </div>
     </dialog>
 
-    <div class="buttons-block">
-      <input
-        class="button-edit-configuration"
-        type="button"
-        value="настройки"
-      />
-      <label class="pseudo-button-load-configuration">
-        загрузить
-        <input class="input-load-configuration" type="file" />
-      </label>
-      <input
-        class="button-save-configuration"
-        type="button"
-        value="сохранить"
-      />
+    <div class="menu-bar">
+      <h1 class="title"></h1>
+      <div class="menu-bar-buttons">
+        <input
+          class="button-edit-configuration"
+          type="button"
+          value="настройки"
+        />
+        <label class="pseudo-button-load-configuration">
+          загрузить
+          <input class="input-load-configuration" type="file" />
+        </label>
+        <input
+          class="button-save-configuration"
+          type="button"
+          value="сохранить"
+        />
+      </div>
     </div>
   </body>
 </html>
