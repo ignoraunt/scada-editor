@@ -1,15 +1,13 @@
 import { state } from "./general.js";
 
 export function mainMenu() {
-  function handleConfigEdit() {
-    var dialog = document.querySelector(".configuration-menu-dialog");
-    dialog.showModal();
+  var dialog = document.querySelector(".configuration-menu-dialog");
+  var mainMenuButton = document.querySelector(".button-edit-configuration");
+  var cancelButton = document.querySelector(".conf-cancel-button");
+  var saveButton = document.querySelector(".conf-save-button");
 
-    var cancelButton = document.querySelector(".conf-cancel-button");
-    var saveButton = document.querySelector(".conf-save-button");
-
+  var openMainMenu = (() => {
     var settings = state.getSettings();
-
     var title = document.querySelector(".conf-title");
     var width = document.querySelector(".conf-wrapper-width");
     var height = document.querySelector(".conf-wrapper-height");
@@ -20,29 +18,37 @@ export function mainMenu() {
     height.value = settings.wrapper.height;
     step.value = settings.wrapper.gridStep;
 
-    function saveSettings() {
+    function cancel() {
+      dialog.close();
+    }
+
+    function save() {
       settings.title = title.value;
       settings.wrapper.width = width.value;
       settings.wrapper.height = height.value;
       settings.wrapper.gridStep = step.value;
       state.instantiateWrapper(width.value, height.value);
       dialog.close();
-
-      cancelButton.removeEventListener("click", cancel);
-      saveButton.removeEventListener("click", saveSettings);
     }
 
-    function cancel() {
-      dialog.close();
-
-      cancelButton.removeEventListener("click", cancel);
-      saveButton.removeEventListener("click", saveSettings);
+    function handleKeyboard(e) {
+      if (e.key === "Escape") {
+        cancel();
+      }
+      if (e.key === "Enter" && e.target !== cancelButton) {
+        e.preventDefault();
+        save();
+      }
     }
 
+    dialog.addEventListener("keydown", handleKeyboard);
     cancelButton.addEventListener("click", cancel);
-    saveButton.addEventListener("click", saveSettings);
-  }
+    saveButton.addEventListener("click", save);
 
-  var menuDialog = document.querySelector(".button-edit-configuration");
-  menuDialog.addEventListener("click", handleConfigEdit);
+    return function () {
+      dialog.showModal();
+    };
+  })();
+
+  mainMenuButton.addEventListener("click", openMainMenu);
 }
