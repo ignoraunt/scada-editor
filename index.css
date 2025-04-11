@@ -215,19 +215,19 @@ input::selection {
   background-color: hsl(160 40% 40%);
 }
 
-input[name="conf-cancel-button"] {
+input.conf-cancel-button {
   background-color: hsl(0 22% 28%);
 }
 
-input[name="conf-save-button"] {
+input.conf-save-button {
   background-color: hsl(160 22% 28%);
 }
 
-input[name="conf-cancel-button"]:hover {
+input.conf-cancel-button:hover {
   background-color: hsl(0 22% 32%);
 }
 
-input[name="conf-save-button"]:hover {
+input.conf-save-button:hover {
   background-color: hsl(160 22% 32%);
 }
 

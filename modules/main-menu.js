@@ -5,17 +5,15 @@ export function mainMenu() {
     var dialog = document.querySelector(".configuration-menu-dialog");
     dialog.showModal();
 
-    var cancelButton = document.querySelector(
-      "input[name='conf-cancel-button'"
-    );
-    var saveButton = document.querySelector("input[name='conf-save-button'");
+    var cancelButton = document.querySelector(".conf-cancel-button");
+    var saveButton = document.querySelector(".conf-save-button");
 
     var settings = state.getSettings();
 
-    var title = document.querySelector("input[name='conf-title'");
-    var width = document.querySelector("input[name='conf-wrapper-width'");
-    var height = document.querySelector("input[name='conf-wrapper-height'");
-    var step = document.querySelector("input[name='conf-wrapper-gridstep'");
+    var title = document.querySelector(".conf-title");
+    var width = document.querySelector(".conf-wrapper-width");
+    var height = document.querySelector(".conf-wrapper-height");
+    var step = document.querySelector(".conf-wrapper-gridstep");
 
     title.value = settings.title;
     width.value = settings.wrapper.width;
