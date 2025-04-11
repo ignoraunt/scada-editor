@@ -1,15 +1,11 @@
-var l = console.log;
+window.opener.postMessage("loaded", "*");
 
-// fetch("./mock-data.json")
-//   .then((res) => {
-//     return res.json();
-//   })
-//   .then((json) => {
-//     console.log(json);
-//     renderTitle(json);
-//     renderWrapper(json);
-//     renderElements(json);
-//   });
+function receiveMessage(message) {
+  document.body.innerHTML = "";
+  renderTitle(message);
+  renderWrapper(message);
+  renderElements(message);
+}
 
 var load = document.querySelector("input");
 var label = document.querySelector("label");

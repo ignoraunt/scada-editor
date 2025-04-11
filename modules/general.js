@@ -206,7 +206,6 @@ export function general() {
     }
 
     moveElement(id, x, y) {
-      l(id, x);
       this.elements[id].move(x, y);
     }
 
@@ -281,6 +280,27 @@ export function general() {
   document.addEventListener("keydown", (e) => {
     if (e.key === "q") {
       state.inspectState();
+    }
+  });
+
+  var viewerWindow = null;
+
+  window.addEventListener("message", (e) => {
+    if (!e.data) return;
+    var data = state.saveState();
+    viewerWindow.receiveMessage(data);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "w" || e.key === "ц") {
+      var url = "../viewer/viewer.html";
+
+      if (!viewerWindow) {
+        viewerWindow = window.open(url);
+      } else {
+        var data = state.saveState();
+        viewerWindow.receiveMessage(data);
+      }
     }
   });
 }
