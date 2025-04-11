@@ -41,10 +41,7 @@ dialog::backdrop {
   transition: opacity 800ms ease-in;
 }
 
-/* ------------ */
-/* gauges style */
-
-div[data-type="gauge"] {
+[data-type="gauge"] {
   z-index: 1;
   position: absolute;
   top: 0;
@@ -52,48 +49,48 @@ div[data-type="gauge"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  outline: 1px solid hsl(210 10% 40%);
+  outline: 1px solid hsl(210 20% 42%);
   outline-offset: -1px;
-  background-color: hsl(210 10% 27%);
+  background-color: hsl(210 17% 24%);
   height: 45px;
   width: 135px;
   font-size: 22px;
   color: hsl(210 50% 90%);
 }
-div[data-type="gauge"]:hover {
-  background-color: hsl(210, 12%, 30%);
+[data-type="gauge"]:hover {
+  background-color: hsl(210, 17%, 28%);
 }
 
-div[data-type="gauge"].selected-gauge {
-  outline: 1px dashed hsl(160 80% 70%);
-  background-color: hsl(210, 12%, 30%);
+[data-type="gauge"].selected-gauge {
+  outline: 1px dashed hsl(210 50% 60%);
+  background-color: hsl(210, 17%, 28%);
 }
-div[data-type="gauge"].selected-gauge:hover {
-  background-color: hsl(210, 12%, 30%);
+[data-type="gauge"].selected-gauge:hover {
+  background-color: hsl(210, 17%, 28%);
 }
 
-.new-gauge {
-  outline: 1px dashed hsl(0 50% 50%);
-  background-color: hsl(210, 12%, 30%);
+[data-type="gauge"].new-gauge {
+  outline: 1px dashed hsl(360 50% 70%);
+  background-color: hsl(210, 8%, 20%);
 }
-.new-gauge:hover {
-  background-color: hsl(210, 12%, 30%);
+[data-type="gauge"].new-gauge:hover {
+  background-color: hsl(210, 8%, 20%);
 }
 
 .gauge-resize-top {
-  box-shadow: inset hsl(160, 100%, 30%) 0px 3px 0px 0px;
+  box-shadow: inset hsl(210, 50%, 60%) 0px 3px 0px 0px;
 }
 
 .gauge-resize-left {
-  box-shadow: inset hsl(160, 100%, 30%) 3px 0px 0px 0px;
+  box-shadow: inset hsl(210, 50%, 60%) 3px 0px 0px 0px;
 }
 
 .gauge-resize-right {
-  box-shadow: inset hsl(160, 100%, 30%) -3px 0px 0px 0px;
+  box-shadow: inset hsl(210, 50%, 60%) -3px 0px 0px 0px;
 }
 
 .gauge-resize-bottom {
-  box-shadow: inset hsl(160, 100%, 30%) 0px -3px 0px 0px;
+  box-shadow: inset hsl(210, 50%, 60%) 0px -3px 0px 0px;
 }
 
 .gauge-renaming-input {
@@ -118,19 +115,19 @@ div[data-type="gauge"].selected-gauge:hover {
 .context-menu {
   z-index: 2;
   position: absolute;
-  border: 1px solid hsl(210 20% 50%);
-  color: hsl(0, 10%, 10%);
+  border: 1px solid hsl(210 20% 40%);
+  color: hsl(210 15% 90%);
 }
 
 .context-menu-item {
-  border-bottom: 1px solid #555;
-  background-color: hsl(210 20% 70%);
+  border-bottom: 1px solid hsl(210 10% 30%);
+  background-color: hsl(210 10% 15%);
   padding: 4px 8px;
   font-size: 18px;
   cursor: pointer;
 }
 .context-menu-item:hover {
-  background-color: hsl(210 20% 80%);
+  background-color: hsl(210 10% 20%);
 }
 .context-menu-item:last-child {
   border-bottom: none;
@@ -290,7 +287,7 @@ input.conf-save-button:hover {
 .phantom-block {
   z-index: 2;
   position: absolute;
-  outline: 1px dashed hsl(160, 25%, 45%);
+  outline: 1px dashed hsl(210, 25%, 45%);
   outline-offset: -1px;
-  background-color: hsl(160 20% 30% / 50%);
+  background-color: hsl(210 20% 30% / 50%);
 }
