@@ -6,7 +6,7 @@ export var state;
 
 export function general() {
   class Element {
-    constructor(id, type, x, y, width, height, name) {
+    constructor(id, type, x, y, width, height, name, invalid) {
       this.id = id;
       this.type = type;
       this.x = x;
@@ -14,6 +14,7 @@ export function general() {
       this.width = width || 100;
       this.height = height || 60;
       this.dbId = name || "0";
+      this.invalid = invalid || false;
     }
 
     getSettings() {
@@ -72,14 +73,17 @@ export function general() {
       div.style.top = this.y + "px";
       div.style.width = this.width + "px";
       div.style.height = this.height + "px";
+
       div.setAttribute("draggable", "true");
       div.dataset.id = this.id;
       div.dataset.type = this.type;
       div.innerText = this.dbId;
 
-      // var wrapper = state.settings.wrapper.wrapperElement;
-      var wrapper = document.querySelector(".user-wrapper");
+      if (this.invalid) {
+        div.classList.add("invalid");
+      }
 
+      var wrapper = document.querySelector(".user-wrapper");
       wrapper.append(div);
     }
   }
@@ -176,6 +180,7 @@ export function general() {
           width: el.width,
           height: el.height,
           name: el.dbId,
+          invalid: el.invalid
         };
 
         this.makeElement(arg);
@@ -221,8 +226,18 @@ export function general() {
       var width = args.width || 100;
       var height = args.height || 60;
       var name = args.name;
+      var invalid = args.invalid || false;
 
-      var newElement = new Element(id, type, x, y, width, height, name);
+      var newElement = new Element(
+        id,
+        type,
+        x,
+        y,
+        width,
+        height,
+        name,
+        invalid
+      );
 
       this.elements[id] = newElement;
       this.elements[id].id = id;
@@ -294,6 +309,8 @@ export function general() {
   document.addEventListener("keydown", (e) => {
     if (e.key === "w" || e.key === "ц") {
       var url = "../viewer/viewer.html";
+
+      // debugger
 
       if (!viewerWindow) {
         viewerWindow = window.open(url);

@@ -27,16 +27,18 @@ export function contextMenu() {
 
     function applyRenaming() {
       element.innerText = input.value;
-      element.classList.remove("new-gauge");
+      element.classList.remove("invalid");
       element.setAttribute("draggable", "true");
       element.dataset.dbId = input.value;
 
-      var a = state.getElementRecord(args.id);
-      a.dbId = input.value;
+      var record = state.getElementRecord(args.id);
+      record.dbId = input.value;
+      record.invalid = false;
 
       if (input.value === "") {
         element.innerText = initialValue;
-        element.classList.add("new-gauge");
+        element.classList.add("invalid");
+        record.invalid = true;
       }
 
       input.remove();
@@ -59,8 +61,6 @@ export function contextMenu() {
   }
 
   function createBlock(args) {
-    console.dir(args);
-
     var settings = state.getSettings();
     var wrapper = settings.wrapper;
     var wrapperDOMElement = wrapper.wrapperElement;
@@ -73,6 +73,7 @@ export function contextMenu() {
       type: "gauge",
       x: pointerOffsetPosX,
       y: pointerOffsetPosY,
+      invalid: true,
     };
 
     state.makeElement(elementArgs);

@@ -69,11 +69,11 @@ dialog::backdrop {
   background-color: hsl(210, 17%, 28%);
 }
 
-[data-type="gauge"].new-gauge {
+[data-type="gauge"].invalid {
   outline: 1px dashed hsl(360 50% 70%);
   background-color: hsl(210, 8%, 20%);
 }
-[data-type="gauge"].new-gauge:hover {
+[data-type="gauge"].invalid:hover {
   background-color: hsl(210, 8%, 20%);
 }
 
