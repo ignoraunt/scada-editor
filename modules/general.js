@@ -180,7 +180,7 @@ export function general() {
           width: el.width,
           height: el.height,
           name: el.dbId,
-          invalid: el.invalid
+          invalid: el.invalid,
         };
 
         this.makeElement(arg);
@@ -302,15 +302,20 @@ export function general() {
 
   window.addEventListener("message", (e) => {
     if (!e.data) return;
-    var data = state.saveState();
-    viewerWindow.receiveMessage(data);
+
+    if (e.data === "loaded") {
+      var data = state.saveState();
+      viewerWindow.receiveMessage(data);
+    }
+
+    if (e.data === "closed") {
+      viewerWindow = null;
+    }
   });
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "w" || e.key === "ц") {
       var url = "../viewer/viewer.html";
-
-      // debugger
 
       if (!viewerWindow) {
         viewerWindow = window.open(url);

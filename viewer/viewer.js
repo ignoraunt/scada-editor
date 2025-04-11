@@ -1,5 +1,11 @@
 window.opener.postMessage("loaded", "*");
 
+function sendInactive() {
+  window.opener.postMessage("closed", "*");
+}
+
+window.addEventListener("beforeunload", sendInactive);
+
 function receiveMessage(message) {
   document.body.innerHTML = "";
   renderTitle(message);
