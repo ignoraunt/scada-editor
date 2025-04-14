@@ -4,56 +4,125 @@ import { state } from "./general.js";
 import { pointedID } from "./elements-resizing.js";
 
 export function contextMenu() {
-  function renameBlock(args) {
+  function renameElement(args) {
     var element = args.element;
     var type = args.type;
 
-    if (type !== "gauge") return;
+    if (type === "wrapper") return;
 
-    var initialValue = element.innerText;
-    element.innerText = "";
+    var initialValue = element.innerText || element.value;
 
     var input = document.createElement("input");
-    input.classList.add("gauge-renaming-input");
+    input.classList.add("element-renaming-input");
     input.value = initialValue;
 
+    if (type === "button") {
+      element.value = "";
+
+      input.value = initialValue;
+
+      var settings = state.getSettings();
+      var wrapper = settings.wrapper;
+      var wrapperDOMElement = wrapper.wrapperElement;
+
+      var wrapperOffsetX = wrapperDOMElement.offsetLeft;
+      var wrapperOffsetY = wrapperDOMElement.offsetTop;
+
+      var rect = element.getBoundingClientRect();
+
+      input.style.position = "absolute";
+
+      input.style.left = rect.x - 1 - wrapperOffsetX + "px";
+      input.style.top = rect.y - 1 - wrapperOffsetY + "px";
+
+      input.style.width = rect.width - 5 + "px";
+      input.style.height = rect.height - 5 + "px";
+
+      input.classList.add("element-renaming-input-button");
+
+      element.insertAdjacentElement("beforebegin", input);
+    } else {
+      element.innerText = "";
+      element.append(input);
+    }
+
     element.removeAttribute("draggable");
-    element.append(input);
 
     // TODO better to find out whats's happening here
     setTimeout(() => {
       input.focus();
     });
 
-    function applyRenaming() {
-      element.innerText = input.value;
-      element.classList.remove("invalid");
-      element.setAttribute("draggable", "true");
-      element.dataset.dbId = input.value;
+    var removed = false;
+
+    function applyRenaming(e) {
+      l("once?");
+
+      e.stopImmediatePropagation();
+
+      // if (!removed) return;
+      // removed = true;
 
       var record = state.getElementRecord(args.id);
-      record.dbId = input.value;
-      record.invalid = false;
+
+      element.classList.remove("invalid");
+      element.setAttribute("draggable", "true");
+
+      if (type === "gauge") {
+        element.dataset.dbId = input.value;
+        element.innerText = input.value;
+        record.invalid = false;
+        record.dbId = input.value;
+
+        if (input.value === "") {
+        }
+      }
+
+      if (type === "button") {
+        element.value = input.value;
+        record.text = input.value;
+
+        if (input.value === "") {
+          element.value = initialValue;
+        }
+      }
+
+      if (type === "label") {
+        element.innerText = input.value;
+        record.text = input.value;
+
+        if (input.value === "") {
+          element.innerText = initialValue;
+        }
+      }
 
       if (input.value === "") {
         element.innerText = initialValue;
+        element.value = initialValue;
         element.classList.add("invalid");
         record.invalid = true;
       }
 
       input.remove();
+
       document.removeEventListener("keydown", handleBlur);
+      input.removeEventListener("blur", applyRenaming, { once: true });
+
+      setTimeout(() => {
+        element.blur();
+      });
     }
 
     function handleBlur(e) {
+      // e.stopImmediatePropagation();
       var key = e.key;
-      if (key === "Escape" || key === "Enter") {
-        applyRenaming();
+      if (e.type === "blur" || key === "Escape" || key === "Enter") {
+        applyRenaming(e);
       }
     }
 
-    input.addEventListener("blur", applyRenaming, { once: true });
     document.addEventListener("keydown", handleBlur);
+    input.addEventListener("blur", handleBlur, { once: true });
   }
 
   function removeBlock(args) {
@@ -68,13 +137,17 @@ export function contextMenu() {
     var pointerOffsetPosX = args.pointer[0] - wrapperDOMElement.offsetLeft;
     var pointerOffsetPosY = args.pointer[1] - wrapperDOMElement.offsetTop;
 
+    var type = args.action.split("-")[1];
+
     var elementArgs = {
       id: "",
-      type: "gauge",
+      type: type,
       x: pointerOffsetPosX,
       y: pointerOffsetPosY,
       invalid: true,
     };
+
+    debugger;
 
     state.makeElement(elementArgs);
   }
@@ -95,13 +168,13 @@ export function contextMenu() {
   }
 
   function action(args) {
-    if (args.action === "create") {
+    if (args.action.slice(0, 3) === "add") {
       createBlock(args);
       return;
     }
 
     if (args.action === "rename") {
-      renameBlock(args);
+      renameElement(args);
       return;
     }
 
@@ -145,8 +218,22 @@ export function contextMenu() {
         ["Скопировать", "copy"],
         ["Удалить", "delete"],
       ],
+      label: [
+        ["Изменить надпись", "rename"],
+        ["Изменить цвет", "palette"],
+        ["Скопировать", "copy"],
+        ["Удалить", "delete"],
+      ],
+      button: [
+        ["Переименовать", "rename"],
+        ["Изменить цвет", "palette"],
+        ["Скопировать", "copy"],
+        ["Удалить", "delete"],
+      ],
       wrapper: [
-        ["Создать элемент", "create"],
+        ["Создать датчик", "add-gauge"],
+        ["Создать надпись", "add-label"],
+        ["Создать кнопку", "add-button"],
         ["Добавить изображение", "picture"],
       ],
     };
