@@ -284,6 +284,10 @@ input.conf-save-button:hover {
   filter: brightness(110%);
 }
 
+.menu-bar .button-run-viewer {
+  background-color: hsl(160, 20%, 40%);
+}
+
 .phantom-block {
   z-index: 2;
   position: absolute;

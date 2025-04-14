@@ -300,6 +300,17 @@ export function general() {
 
   var viewerWindow = null;
 
+  function runViewer() {
+    var url = "../viewer/viewer.html";
+
+    if (!viewerWindow) {
+      viewerWindow = window.open(url);
+    } else {
+      var data = state.saveState();
+      viewerWindow.receiveMessage(data);
+    }
+  }
+
   window.addEventListener("message", (e) => {
     if (!e.data) return;
 
@@ -313,16 +324,12 @@ export function general() {
     }
   });
 
+  var btnRunViewer = document.querySelector(".button-run-viewer");
+  btnRunViewer.addEventListener("click", runViewer);
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "w" || e.key === "ц") {
-      var url = "../viewer/viewer.html";
-
-      if (!viewerWindow) {
-        viewerWindow = window.open(url);
-      } else {
-        var data = state.saveState();
-        viewerWindow.receiveMessage(data);
-      }
+      runViewer();
     }
   });
 }
