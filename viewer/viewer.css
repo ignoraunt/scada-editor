@@ -33,11 +33,12 @@ input {
 h1 {
   position: absolute;
   top: 10px;
-  left: 10px;
   margin: 0;
+  width: 100%;
   padding: 0;
   font-size: 26px;
   color: hsl(210, 20%, 60%);
+  text-align: center;
 }
 
 .wrapper {
@@ -51,8 +52,47 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid hsl(210, 40%, 40%);
-  background: hsl(210, 20%, 30%);
+  border: 1px solid hsl(210, 30%, 30%);
+  margin: 0;
+  background: hsl(210, 35%, 20%);
+  padding: 0;
   font-size: 22px;
+  color: #bbb;
+}
+
+[data-type="gauge"] div {
+  border-radius: 4px;
+  background-color: #111418;
+  height: calc(100% - 20px);
+  width: calc(100% - 20px);
+  padding: 4px;
+  font-size: 26px;
+  color: green;
+  text-align: center;
+}
+
+[data-type="button"] {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid hsl(160, 30%, 30%);
+  margin: 0;
+  background: hsl(160, 35%, 20%);
+  padding: 0;
+  font-size: 22px;
+  color: #bbb;
+}
+
+[data-type="label"] {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid hsl(260, 30%, 30%);
+  margin: 0;
+  background: hsl(260, 20%, 30%);
+  padding: 0;
+  font-size: 20px;
   color: #bbb;
 }

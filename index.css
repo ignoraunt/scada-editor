@@ -41,8 +41,39 @@ dialog::backdrop {
   transition: opacity 800ms ease-in;
 }
 
+[data-type="label"] {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: 1px solid hsl(260 20% 42%);
+  outline-offset: -1px;
+  background-color: hsla(260, 17%, 24%, 0.75);
+  font-size: 20px;
+  color: hsl(210 50% 90%);
+}
+[data-type="label"]:hover {
+  background-color: hsla(260, 17%, 28%, 0.75);
+}
+
+[data-type="button"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline-offset: -1px;
+  background-color: hsl(160 17% 24%);
+  font-size: 22px;
+  color: hsl(210 50% 90%);
+  box-shadow: 2px 2px 2px #111;
+}
+[data-type="button"]:hover {
+  background-color: hsl(160, 17%, 28%);
+}
+
 [data-type="gauge"] {
-  z-index: 1;
   position: absolute;
   top: 0;
   left: 0;

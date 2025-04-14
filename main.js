@@ -1,3 +1,4 @@
+import { initClasses } from "./modules/classes.js";
 import { general } from "./modules/general.js";
 import { elementsMoving } from "./modules/elements-moving.js";
 import { elementsResizing } from "./modules/elements-resizing.js";
@@ -7,6 +8,7 @@ import { configurationHandling } from "./modules/state-files-handling.js";
 
 (() => {
   var bootList = [
+    initClasses,
     general,
     elementsMoving,
     elementsResizing,

@@ -60,16 +60,48 @@ function renderElements(data) {
   for (id in elements) {
     var element = elements[id];
 
-    var div = document.createElement("div");
-    div.style.left = element.x + "px";
-    div.style.top = element.y + "px";
-    div.style.width = element.width + "px";
-    div.style.height = element.height + "px";
-    div.dataset.type = element.type;
-    div.dataset.dbId = element.dbId;
-    div.innerText = element.dbId;
     var wrapper = document.querySelector(".wrapper");
-    wrapper.append(div);
+
+    if (element.type === "gauge") {
+      var div = document.createElement("div");
+      div.style.left = element.x + "px";
+      div.style.top = element.y + "px";
+      div.style.width = element.width + "px";
+      div.style.height = element.height + "px";
+      div.dataset.type = element.type;
+      div.dataset.dbId = element.dbId;
+
+      var inn = document.createElement("div");
+      inn.innerText = element.dbId;
+
+      div.append(inn);
+      wrapper.append(div);
+    }
+
+    if (element.type === "label") {
+      var p = document.createElement("p");
+      p.style.left = element.x + "px";
+      p.style.top = element.y + "px";
+      p.style.width = element.width + "px";
+      p.style.height = element.height + "px";
+      p.dataset.id = element.id;
+      p.dataset.type = element.type;
+      p.innerText = element.text;
+      wrapper.append(p);
+    }
+
+    if (element.type === "button") {
+      var input = document.createElement("input");
+      input.style.left = element.x + "px";
+      input.style.top = element.y + "px";
+      input.style.width = element.width + "px";
+      input.style.height = element.height + "px";
+      input.dataset.id = element.id;
+      input.dataset.type = element.type;
+      input.type = "button";
+      input.value = element.text;
+      wrapper.append(input);
+    }
   }
 }
 
