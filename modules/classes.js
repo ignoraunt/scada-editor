@@ -14,9 +14,6 @@ export function initClasses() {
       this.y = args.y;
       this.width = args.width || 100;
       this.height = args.height || 60;
-      this.dbId = args.name || "0";
-      this.invalid = args.invalid || false;
-      this.text = args.text || "";
     }
 
     getSettings() {
@@ -66,6 +63,12 @@ export function initClasses() {
   }
 
   class Gauge extends Element {
+    constructor(args) {
+      super(args);
+      this.invalid = args.invalid || false;
+      this.dbId = args.name || "0";
+    }
+
     rename() {
       var DOMElement = this.getDOMElementByID();
       DOMElement.innerText = this.dbId;
@@ -96,6 +99,11 @@ export function initClasses() {
   }
 
   class Label extends Element {
+    constructor(args) {
+      super(args);
+      this.text = args.text || "";
+    }
+
     rename() {
       var DOMElement = this.getDOMElementByID();
       DOMElement.innerText = this.text;
@@ -120,9 +128,14 @@ export function initClasses() {
   }
 
   class Button extends Element {
+    constructor(args) {
+      super(args);
+      this.text = args.text || "";
+    }
+
     rename() {
       var DOMElement = this.getDOMElementByID();
-      DOMElement.innerText = this.text;
+      DOMElement.value = this.text;
     }
 
     pushToDOM() {
@@ -139,7 +152,7 @@ export function initClasses() {
       input.setAttribute("draggable", "true");
 
       input.type = "button";
-      input.value = this.text;
+      // input.value = this.text;
 
       var wrapper = document.querySelector(".user-wrapper");
       wrapper.append(input);
@@ -285,7 +298,7 @@ export function initClasses() {
         height: args.height || 60,
         name: args.name,
         invalid: args.invalid || false,
-        text: args.text || "",
+        text: args.text || "- НАДПИСЬ - ",
       };
 
       if (args.type === "gauge") {
