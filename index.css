@@ -124,7 +124,9 @@ dialog::backdrop {
   box-shadow: inset hsl(210, 50%, 60%) 0px -3px 0px 0px;
 }
 
-.gauge-renaming-input {
+.element-renaming-input {
+  z-index: 1;
+  position: absolute;
   border: none;
   border: 1px dashed hsl(0, 0%, 70%);
   margin: 4px;
@@ -135,12 +137,17 @@ dialog::backdrop {
   font-size: 20px;
   color: inherit;
 }
-.gauge-renaming-input:focus {
+.element-renaming-input:focus {
   outline: none;
+  background-color: transparent;
 }
-.gauge-renaming-input::selection {
+.element-renaming-input::selection {
   background-color: hsl(160, 25%, 45%);
   color: hsl(0, 10%, 10%);
+}
+.element-renaming-input-button {
+  font-size: 22px;
+  color: hsl(210 50% 90%);
 }
 
 .context-menu {
