@@ -32,11 +32,11 @@ export function contextMenu() {
 
       input.style.position = "absolute";
 
-      input.style.left = rect.x - 1 - wrapperOffsetX + "px";
-      input.style.top = rect.y - 1 - wrapperOffsetY + "px";
+      input.style.left = rect.x + 2 - wrapperOffsetX + "px";
+      input.style.top = rect.y + 2 - wrapperOffsetY + "px";
 
-      input.style.width = rect.width - 5 + "px";
-      input.style.height = rect.height - 5 + "px";
+      input.style.width = rect.width - 10 + "px";
+      input.style.height = rect.height - 10 + "px";
 
       input.classList.add("element-renaming-input-button");
 
@@ -55,13 +55,9 @@ export function contextMenu() {
 
     var removed = false;
 
-    function applyRenaming(e) {
-      l("once?");
-
-      e.stopImmediatePropagation();
-
-      // if (!removed) return;
-      // removed = true;
+    function applyRenaming() {
+      if (removed) return;
+      removed = true;
 
       var record = state.getElementRecord(args.id);
 
@@ -103,26 +99,27 @@ export function contextMenu() {
         record.invalid = true;
       }
 
+      input.removeEventListener("keydown", handleBlur);
+      input.removeEventListener("blur", handleBlur);
+
       input.remove();
-
-      document.removeEventListener("keydown", handleBlur);
-      input.removeEventListener("blur", applyRenaming, { once: true });
-
-      setTimeout(() => {
-        element.blur();
-      });
     }
 
     function handleBlur(e) {
-      // e.stopImmediatePropagation();
       var key = e.key;
-      if (e.type === "blur" || key === "Escape" || key === "Enter") {
+      if (
+        e.type === "blur" ||
+        key === "Escape" ||
+        key === "Enter" ||
+        key === "Tab"
+      ) {
+        e.preventDefault();
         applyRenaming(e);
       }
     }
 
-    document.addEventListener("keydown", handleBlur);
-    input.addEventListener("blur", handleBlur, { once: true });
+    input.addEventListener("keydown", handleBlur);
+    input.addEventListener("blur", handleBlur);
   }
 
   function removeBlock(args) {
@@ -146,8 +143,6 @@ export function contextMenu() {
       y: pointerOffsetPosY,
       invalid: true,
     };
-
-    debugger;
 
     state.makeElement(elementArgs);
   }
@@ -231,9 +226,9 @@ export function contextMenu() {
         ["Удалить", "delete"],
       ],
       wrapper: [
-        ["Создать датчик", "add-gauge"],
-        ["Создать надпись", "add-label"],
-        ["Создать кнопку", "add-button"],
+        ["Добавить датчик", "add-gauge"],
+        ["Добавить надпись", "add-label"],
+        ["Добавить кнопку", "add-button"],
         ["Добавить изображение", "picture"],
       ],
     };

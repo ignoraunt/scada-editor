@@ -127,18 +127,17 @@ dialog::backdrop {
 .element-renaming-input {
   z-index: 1;
   position: absolute;
+  outline: 1px dashed green;
   border: none;
-  border: 1px dashed hsl(0, 0%, 70%);
   margin: 4px;
   background-color: transparent;
-  width: 100%;
+  width: calc(100% - 8px);
   padding: 4px;
   font-family: inherit;
   font-size: 20px;
   color: inherit;
 }
 .element-renaming-input:focus {
-  outline: none;
   background-color: transparent;
 }
 .element-renaming-input::selection {

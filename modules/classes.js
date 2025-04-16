@@ -298,7 +298,7 @@ export function initClasses() {
         height: args.height || 60,
         name: args.name,
         invalid: args.invalid || false,
-        text: args.text || "- НАДПИСЬ - ",
+        text: args.text || "- - - ",
       };
 
       if (args.type === "gauge") {
